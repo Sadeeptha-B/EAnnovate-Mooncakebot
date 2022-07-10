@@ -1,13 +1,16 @@
-const Discord = require('discord.js')
-const client = new Discord.Client({intents: ['GUILDS', 'GUILD_MESSAGES', 'DIRECT_MESSAGES']})
 require('dotenv').config({ path: '.env' });
 
-client.on('ready', () => {
+const Discord = require('discord.js')
+const client = new Discord.Client({intents: ['GUILDS', 'GUILD_MESSAGES', 'DIRECT_MESSAGES']})
+
+client.once('ready', () => {
     console.log("Connected as " + client.user.tag)
 })
 
+const commandPrefix = "!"
+
 client.on("messageCreate", msg => {
-    if(!msg.content.startsWith(process.env.prefix)){
+    if(!msg.content.startsWith(commandPrefix)){
         return
     }
 
@@ -62,8 +65,6 @@ function createEmbed(message, title){
     .setDescription(message)
     .setTimestamp()
 }
-
-
 
 function createModal(){
     const modal = new Discord.Modal()
