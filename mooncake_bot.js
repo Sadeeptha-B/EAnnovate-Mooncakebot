@@ -30,8 +30,8 @@ client.on("messageCreate", msg => {
       msg.channel.send(getOrderButton());
     }
 
-    if(command === "summary"){
-        msg.channel.send({embeds: []})
+    if(msg.content === "!summary"){
+        msg.channel.send({embeds: [createSummaryTable()]})
     }
 })
 
@@ -115,6 +115,13 @@ function createModal(){
     modal.addComponents(components)
     console.log(modal.type)
     return modal
+}
+
+function createSummaryTable(){
+  return new Discord.MessageEmbed()
+  .addFields({name: "Index", value: "1", inline: true}, {name: "Date ordered", value: "02/07/2022, 2:01:15 pm", inline:true}, {name: "Order status", value: "Order Succesful", inline: true},
+  )
+
 }
 
 client.login(process.env.TOKEN)
