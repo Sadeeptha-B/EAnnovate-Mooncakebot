@@ -1,10 +1,17 @@
 require('dotenv').config({ path: '.env' });
 
 const Discord = require('discord.js')
+const Sequelize = require('sequelize')
 const client = new Discord.Client({intents: ['GUILDS', 'GUILD_MESSAGES', 'DIRECT_MESSAGES']})
-
 client.once('ready', () => {
     console.log("Connected as " + client.user.tag)
+})
+
+const sequelize = new Sequelize('database', 'user', 'password', {
+  host:'localhost',
+  dialect:'sqlite',
+  logging:'false',
+  storage:'database.sqlite'
 })
 
 const commandPrefix = "!"
@@ -48,7 +55,6 @@ client.on('interactionCreate', async interaction =>{
 
 function getOrderButton(){
   return {content: 'Click the button below to order some mooncake!',
-  //ephemeral: true,
   components:[{ type: 1, components: [{
     type: 2, custom_id: "Order", label: 'Order', style: 'PRIMARY',
   }]}]}
@@ -107,6 +113,7 @@ function createModal(){
           }]
         }]
     modal.addComponents(components)
+    console.log(modal.type)
     return modal
 }
 
