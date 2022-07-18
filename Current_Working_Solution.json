@@ -42,12 +42,10 @@
         "maxConnectionsPerEndpoint": "60",
         "maxMessageSize": 4096,
         "maxBufferSize": 4096,
-        "x": 820,
-        "y": 560,
+        "x": 920,
+        "y": 800,
         "wires": [
-            [
-                "b812d10f8ff58b8b"
-            ]
+            []
         ]
     },
     {
@@ -58,8 +56,8 @@
         "datatype": "Boolean",
         "value": "0",
         "name": "_sensor0",
-        "x": 460,
-        "y": 140,
+        "x": 560,
+        "y": 380,
         "wires": [
             [
                 "00c5d287f0bedbec"
@@ -74,8 +72,8 @@
         "datatype": "Boolean",
         "value": "0",
         "name": "_sensor1",
-        "x": 460,
-        "y": 220,
+        "x": 560,
+        "y": 460,
         "wires": [
             [
                 "00c5d287f0bedbec"
@@ -90,8 +88,8 @@
         "datatype": "Boolean",
         "value": "0",
         "name": "_sensor2",
-        "x": 460,
-        "y": 320,
+        "x": 560,
+        "y": 560,
         "wires": [
             [
                 "00c5d287f0bedbec"
@@ -106,8 +104,8 @@
         "datatype": "Boolean",
         "value": "",
         "name": "_conveyor0",
-        "x": 470,
-        "y": 420,
+        "x": 570,
+        "y": 660,
         "wires": [
             [
                 "00c5d287f0bedbec"
@@ -122,8 +120,8 @@
         "datatype": "Boolean",
         "value": "",
         "name": "_conveyor1",
-        "x": 470,
-        "y": 480,
+        "x": 570,
+        "y": 720,
         "wires": [
             [
                 "00c5d287f0bedbec"
@@ -138,8 +136,8 @@
         "datatype": "Boolean",
         "value": "",
         "name": "_conveyor2",
-        "x": 470,
-        "y": 540,
+        "x": 570,
+        "y": 780,
         "wires": [
             [
                 "00c5d287f0bedbec"
@@ -154,8 +152,8 @@
         "datatype": "Boolean",
         "value": "",
         "name": "_conveyor3a",
-        "x": 470,
-        "y": 620,
+        "x": 570,
+        "y": 860,
         "wires": [
             [
                 "00c5d287f0bedbec"
@@ -170,8 +168,8 @@
         "datatype": "Boolean",
         "value": "",
         "name": "_conveyor3b",
-        "x": 470,
-        "y": 680,
+        "x": 570,
+        "y": 920,
         "wires": [
             [
                 "00c5d287f0bedbec"
@@ -199,8 +197,8 @@
         "topic": "",
         "payload": "{\"opcuaCommand\":\"addVariable\"}",
         "payloadType": "json",
-        "x": 110,
-        "y": 500,
+        "x": 210,
+        "y": 740,
         "wires": [
             [
                 "f55d06d4eab8278d",
@@ -228,8 +226,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 880,
-        "y": 80,
+        "x": 1140,
+        "y": 260,
         "wires": [
             [
                 "3eb0688190b05146"
@@ -253,8 +251,8 @@
         "securitypolicy": "None",
         "folderName4PKI": "",
         "name": "",
-        "x": 1060,
-        "y": 80,
+        "x": 1320,
+        "y": 260,
         "wires": [
             [
                 "1e62ecc6acfcc7b5",
@@ -267,16 +265,18 @@
         "type": "function",
         "z": "03f07d3f5b088a54",
         "name": "",
-        "func": "return msg;",
+        "func": "flow.set(\"sensor_no\",0)\nflow.set(\"orders\",[0,1,1])\nflow.set(\"completed_orders\", [0,0,0])\n\nmsg.payload = flow.get(\"completed_orders\")\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
-        "initialize": "// Code added here will be run once\n// whenever the node is started.\nflow.set(\"sensor_no\",0)\nflow.set(\"orders\",[3,5,4])\nflow.set(\"completed_orders\", [0,0,0])",
+        "initialize": "// Code added here will be run once\n// whenever the node is started.\nflow.set(\"sensor_no\",0)\nflow.set(\"orders\",[0,1,1])\nflow.set(\"completed_orders\", [0,0,0])",
         "finalize": "",
         "libs": [],
-        "x": 1000,
-        "y": 560,
+        "x": 740,
+        "y": 260,
         "wires": [
-            []
+            [
+                "5f95f6914df089c5"
+            ]
         ]
     },
     {
@@ -284,46 +284,18 @@
         "type": "function",
         "z": "03f07d3f5b088a54",
         "name": "",
-        "func": "let sensor_no = flow.get(\"sensor_no\")\nlet order_no = flow.get(\"orders\")\nlet complete_orders = flow.get(\"completed_orders\")\nmsg.completeOrder = \"false\";\n\nif(msg.payload){\n    complete_orders[sensor_no] += 1\n    if(complete_orders[sensor_no] >= order_no[sensor_no]){\n        // Turn on conveyor here\n        sensor_no += 1\n        if(sensor_no >= order_no.length){\n            sensor_no = 0\n        }\n        flow.set(\"sensor_no\", sensor_no)\n        msg.completeOrder = \"true\"\n    }\n    msg.payload = \"\"\n    flow.set(\"completed_orders\", complete_orders)\n}\n\nreturn msg;",
+        "func": "let sensor_no = flow.get(\"sensor_no\")\nlet order_no = flow.get(\"orders\")\nlet complete_orders = flow.get(\"completed_orders\")\nmsg.completeFlavor = \"false\";\nmsg.completeOrder = \"false\";\n\nif(msg.payload){\n    complete_orders[sensor_no] += 1\n    \n    flow.set(\"completed_orders\", complete_orders)\n}\nif(complete_orders[sensor_no] >= order_no[sensor_no]){\n        // Turn on conveyor here\n        sensor_no += 1\n        if(sensor_no >= order_no.length){\n            sensor_no = 0\n            msg.completeOrder = \"true\";\n        }\n        flow.set(\"sensor_no\", sensor_no)\n        msg.completeFlavor = \"true\"\n}\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 1240,
-        "y": 80,
+        "x": 1500,
+        "y": 260,
         "wires": [
             [
-                "fa7faa6ace39db12"
-            ]
-        ]
-    },
-    {
-        "id": "26b130f5f93f1785",
-        "type": "inject",
-        "z": "03f07d3f5b088a54",
-        "name": "",
-        "props": [
-            {
-                "p": "payload"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
-            }
-        ],
-        "repeat": "0.5",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payload": "",
-        "payloadType": "date",
-        "x": 690,
-        "y": 80,
-        "wires": [
-            [
-                "a96cdafb69f466b7"
+                "fa7faa6ace39db12",
+                "c7cc2ddfef1f48a6"
             ]
         ]
     },
@@ -344,8 +316,8 @@
         "securitypolicy": "None",
         "folderName4PKI": "",
         "name": "",
-        "x": 1740,
-        "y": 80,
+        "x": 2200,
+        "y": 260,
         "wires": [
             [
                 "88a17c10d07a655b"
@@ -360,8 +332,8 @@
         "datatype": "Boolean",
         "value": "0",
         "name": "_Emitter0",
-        "x": 460,
-        "y": 740,
+        "x": 560,
+        "y": 980,
         "wires": [
             [
                 "00c5d287f0bedbec"
@@ -376,8 +348,8 @@
         "datatype": "Boolean",
         "value": "0",
         "name": "_Emitter1",
-        "x": 460,
-        "y": 800,
+        "x": 560,
+        "y": 1040,
         "wires": [
             [
                 "00c5d287f0bedbec"
@@ -392,8 +364,8 @@
         "datatype": "Boolean",
         "value": "0",
         "name": "_Emitter2",
-        "x": 460,
-        "y": 860,
+        "x": 560,
+        "y": 1100,
         "wires": [
             [
                 "00c5d287f0bedbec"
@@ -417,10 +389,12 @@
         "securitypolicy": "None",
         "folderName4PKI": "",
         "name": "",
-        "x": 2320,
-        "y": 80,
+        "x": 2760,
+        "y": 260,
         "wires": [
-            []
+            [
+                "1bafcd3eb5be0af7"
+            ]
         ]
     },
     {
@@ -428,8 +402,8 @@
         "type": "delay",
         "z": "03f07d3f5b088a54",
         "name": "",
-        "pauseType": "delayv",
-        "timeout": "4",
+        "pauseType": "delay",
+        "timeout": "3.9",
         "timeoutUnits": "seconds",
         "rate": "1",
         "nbRateUnits": "1",
@@ -440,8 +414,8 @@
         "drop": false,
         "allowrate": false,
         "outputs": 1,
-        "x": 1940,
-        "y": 80,
+        "x": 2390,
+        "y": 260,
         "wires": [
             [
                 "05b9e186f0255920"
@@ -467,8 +441,8 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 2120,
-        "y": 80,
+        "x": 2560,
+        "y": 260,
         "wires": [
             [
                 "39bbdb08f0c83e22"
@@ -480,7 +454,7 @@
         "type": "switch",
         "z": "03f07d3f5b088a54",
         "name": "",
-        "property": "completeOrder",
+        "property": "completeFlavor",
         "propertyType": "msg",
         "rules": [
             {
@@ -492,11 +466,12 @@
         "checkall": "true",
         "repair": false,
         "outputs": 1,
-        "x": 1390,
-        "y": 80,
+        "x": 1670,
+        "y": 260,
         "wires": [
             [
-                "b813445d28e90a00"
+                "cb269b42d9802cd2",
+                "4c02407eab36d242"
             ]
         ]
     },
@@ -526,8 +501,8 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 1560,
-        "y": 80,
+        "x": 2020,
+        "y": 260,
         "wires": [
             [
                 "f485da2d7fde0dbc"
@@ -547,9 +522,410 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 1290,
-        "y": 180,
+        "x": 1530,
+        "y": 380,
         "wires": []
+    },
+    {
+        "id": "cb269b42d9802cd2",
+        "type": "delay",
+        "z": "03f07d3f5b088a54",
+        "name": "",
+        "pauseType": "delay",
+        "timeout": "1.65",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 1830,
+        "y": 260,
+        "wires": [
+            [
+                "b813445d28e90a00"
+            ]
+        ]
+    },
+    {
+        "id": "5f95f6914df089c5",
+        "type": "trigger",
+        "z": "03f07d3f5b088a54",
+        "name": "",
+        "op1": "",
+        "op2": "",
+        "op1type": "date",
+        "op2type": "date",
+        "duration": "-600",
+        "extend": false,
+        "overrideDelay": true,
+        "units": "ms",
+        "reset": "",
+        "bytopic": "all",
+        "topic": "topic",
+        "outputs": 1,
+        "x": 940,
+        "y": 260,
+        "wires": [
+            [
+                "a96cdafb69f466b7"
+            ]
+        ]
+    },
+    {
+        "id": "0ee2602cbdd020ba",
+        "type": "inject",
+        "z": "03f07d3f5b088a54",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 580,
+        "y": 260,
+        "wires": [
+            [
+                "b812d10f8ff58b8b"
+            ]
+        ]
+    },
+    {
+        "id": "c7cc2ddfef1f48a6",
+        "type": "switch",
+        "z": "03f07d3f5b088a54",
+        "name": "",
+        "property": "completeOrder",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "true",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 1670,
+        "y": 320,
+        "wires": [
+            [
+                "b8b21bca01945d0f"
+            ]
+        ]
+    },
+    {
+        "id": "5e5767d82578ca38",
+        "type": "change",
+        "z": "03f07d3f5b088a54",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "true",
+                "tot": "bool"
+            },
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "ns=2;s=_conveyor3b;datatype=Boolean",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 2000,
+        "y": 320,
+        "wires": [
+            [
+                "0411ba019a1304cd"
+            ]
+        ]
+    },
+    {
+        "id": "b8b21bca01945d0f",
+        "type": "delay",
+        "z": "03f07d3f5b088a54",
+        "name": "",
+        "pauseType": "delay",
+        "timeout": "2",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 1820,
+        "y": 320,
+        "wires": [
+            [
+                "5e5767d82578ca38"
+            ]
+        ]
+    },
+    {
+        "id": "0411ba019a1304cd",
+        "type": "OpcUa-Client",
+        "z": "03f07d3f5b088a54",
+        "endpoint": "df2f1b827a0d1854",
+        "action": "write",
+        "deadbandtype": "a",
+        "deadbandvalue": 1,
+        "time": 10,
+        "timeUnit": "s",
+        "certificate": "n",
+        "localfile": "",
+        "localkeyfile": "",
+        "securitymode": "None",
+        "securitypolicy": "None",
+        "folderName4PKI": "",
+        "name": "",
+        "x": 2200,
+        "y": 320,
+        "wires": [
+            [
+                "e4f8924c7d9e2a65"
+            ]
+        ]
+    },
+    {
+        "id": "744cadb8b493fb4b",
+        "type": "change",
+        "z": "03f07d3f5b088a54",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "false",
+                "tot": "bool"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 2560,
+        "y": 320,
+        "wires": [
+            [
+                "0e6f4a6c5c647209"
+            ]
+        ]
+    },
+    {
+        "id": "0e6f4a6c5c647209",
+        "type": "OpcUa-Client",
+        "z": "03f07d3f5b088a54",
+        "endpoint": "df2f1b827a0d1854",
+        "action": "write",
+        "deadbandtype": "a",
+        "deadbandvalue": 1,
+        "time": 10,
+        "timeUnit": "s",
+        "certificate": "n",
+        "localfile": "",
+        "localkeyfile": "",
+        "securitymode": "None",
+        "securitypolicy": "None",
+        "folderName4PKI": "",
+        "name": "",
+        "x": 2760,
+        "y": 320,
+        "wires": [
+            [
+                "e2bb79a03ddd7c11"
+            ]
+        ]
+    },
+    {
+        "id": "e4f8924c7d9e2a65",
+        "type": "delay",
+        "z": "03f07d3f5b088a54",
+        "name": "",
+        "pauseType": "delay",
+        "timeout": "3",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "0",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 2380,
+        "y": 320,
+        "wires": [
+            [
+                "744cadb8b493fb4b"
+            ]
+        ]
+    },
+    {
+        "id": "23acf231fb14ab6e",
+        "type": "inject",
+        "z": "03f07d3f5b088a54",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 940,
+        "y": 340,
+        "wires": [
+            [
+                "6f5de5aff78384a7"
+            ]
+        ]
+    },
+    {
+        "id": "278f127fe68f4140",
+        "type": "debug",
+        "z": "03f07d3f5b088a54",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1310,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "6f5de5aff78384a7",
+        "type": "function",
+        "z": "03f07d3f5b088a54",
+        "name": "",
+        "func": "msg.payload = flow.get(\"completed_orders\")\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1100,
+        "y": 340,
+        "wires": [
+            [
+                "278f127fe68f4140"
+            ]
+        ]
+    },
+    {
+        "id": "e2bb79a03ddd7c11",
+        "type": "function",
+        "z": "03f07d3f5b088a54",
+        "name": "",
+        "func": "flow.set(\"sensor_no\",0)\nflow.set(\"completed_orders\", [0,0,0])\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "// Code added here will be run once\n// whenever the node is started.\nflow.set(\"sensor_no\",0)\nflow.set(\"completed_orders\", [0,0,0])",
+        "finalize": "",
+        "libs": [],
+        "x": 2960,
+        "y": 320,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "4c02407eab36d242",
+        "type": "change",
+        "z": "03f07d3f5b088a54",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "reset",
+                "pt": "msg",
+                "to": "",
+                "tot": "date"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 700,
+        "y": 160,
+        "wires": [
+            [
+                "5f95f6914df089c5"
+            ]
+        ]
+    },
+    {
+        "id": "1bafcd3eb5be0af7",
+        "type": "change",
+        "z": "03f07d3f5b088a54",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "",
+                "tot": "date"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 700,
+        "y": 100,
+        "wires": [
+            [
+                "5f95f6914df089c5"
+            ]
+        ]
     },
     {
         "id": "df2f1b827a0d1854",
