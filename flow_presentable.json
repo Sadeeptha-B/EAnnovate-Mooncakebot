@@ -1,0 +1,1493 @@
+[
+    {
+        "id": "023d3c161439f2e9",
+        "type": "subflow",
+        "name": "Deactivate Device",
+        "info": "",
+        "category": "",
+        "in": [
+            {
+                "x": 60,
+                "y": 80,
+                "wires": [
+                    {
+                        "id": "dafb536a12a69b14"
+                    }
+                ]
+            }
+        ],
+        "out": [
+            {
+                "x": 580,
+                "y": 80,
+                "wires": [
+                    {
+                        "id": "0914b931de1a3157",
+                        "port": 0
+                    }
+                ]
+            }
+        ],
+        "env": [
+            {
+                "name": "DELAY",
+                "type": "str",
+                "value": "1"
+            }
+        ],
+        "meta": {},
+        "color": "#DDAA99"
+    },
+    {
+        "id": "0914b931de1a3157",
+        "type": "change",
+        "z": "023d3c161439f2e9",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "false",
+                "tot": "bool"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 420,
+        "y": 80,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "dafb536a12a69b14",
+        "type": "delay",
+        "z": "023d3c161439f2e9",
+        "name": "",
+        "pauseType": "delay",
+        "timeout": "${DELAY}",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "0",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 230,
+        "y": 80,
+        "wires": [
+            [
+                "0914b931de1a3157"
+            ]
+        ]
+    },
+    {
+        "id": "7a42aa29ee8ae8b9",
+        "type": "tab",
+        "label": "New Working Flow",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "9e476e75a2225af1",
+        "type": "group",
+        "z": "7a42aa29ee8ae8b9",
+        "name": "Initialize variables on Factory I/O",
+        "style": {
+            "label": true
+        },
+        "nodes": [
+            "0fe80d0e287d0692",
+            "0b132e4bee3235c9",
+            "b37129bd6fe1a1d6",
+            "ac146732d262e8f7",
+            "0270d6373b514395",
+            "8f03d082ee772069",
+            "0b449f9a99929730",
+            "7dc4a4cd61ec6fe1",
+            "b6671fb3b3800fa3",
+            "1091ad3f6e33a5dc",
+            "74b9695eb9e15277",
+            "81b8d95da0460708",
+            "fdeb2a0f6e07aeb7",
+            "c8114cddd9b45dc9"
+        ],
+        "x": 94,
+        "y": 159,
+        "w": 912,
+        "h": 862
+    },
+    {
+        "id": "b4260107117d8bc4",
+        "type": "group",
+        "z": "7a42aa29ee8ae8b9",
+        "name": "Dashboard",
+        "style": {
+            "label": true
+        },
+        "nodes": [
+            "1b629bed14cc9153",
+            "0d6f411336519cb4",
+            "ec954aaf66c14a68",
+            "03d8fff2233bcbe4",
+            "0940a4525b585659",
+            "0d65e3ae12e6bd45",
+            "964b6613aaf0b739",
+            "438f02c27b37031f",
+            "39be2a3db018f430",
+            "b708faf521a06c7b",
+            "66f691e5e8d9aeac",
+            "45afae437bc7ace6",
+            "255e09f21cb01c31"
+        ],
+        "x": 1174,
+        "y": 759,
+        "w": 1312,
+        "h": 482
+    },
+    {
+        "id": "0fe80d0e287d0692",
+        "type": "OpcUa-Server",
+        "z": "7a42aa29ee8ae8b9",
+        "g": "9e476e75a2225af1",
+        "port": "53880",
+        "name": "",
+        "endpoint": "",
+        "users": "users.json",
+        "nodesetDir": "",
+        "folderName4PKI": "",
+        "autoAcceptUnknownCertificate": true,
+        "registerToDiscovery": false,
+        "constructDefaultAddressSpace": true,
+        "allowAnonymous": true,
+        "endpointNone": true,
+        "endpointSign": true,
+        "endpointSignEncrypt": true,
+        "endpointBasic128Rsa15": true,
+        "endpointBasic256": true,
+        "endpointBasic256Sha256": true,
+        "maxNodesPerBrowse": 0,
+        "maxNodesPerHistoryReadData": 0,
+        "maxNodesPerHistoryReadEvents": 0,
+        "maxNodesPerHistoryUpdateData": 0,
+        "maxNodesPerRead": 0,
+        "maxNodesPerWrite": 0,
+        "maxNodesPerMethodCall": 0,
+        "maxNodesPerRegisterNodes": 0,
+        "maxNodesPerNodeManagement": 0,
+        "maxMonitoredItemsPerCall": 0,
+        "maxNodesPerHistoryUpdateEvents": 0,
+        "maxNodesPerTranslateBrowsePathsToNodeIds": 0,
+        "maxConnectionsPerEndpoint": "60",
+        "maxMessageSize": 4096,
+        "maxBufferSize": 4096,
+        "x": 900,
+        "y": 620,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "0b132e4bee3235c9",
+        "type": "OpcUa-Item",
+        "z": "7a42aa29ee8ae8b9",
+        "g": "9e476e75a2225af1",
+        "item": "ns=2;s=_sensor0;datatype=Boolean",
+        "datatype": "Boolean",
+        "value": "0",
+        "name": "_sensor0",
+        "x": 540,
+        "y": 200,
+        "wires": [
+            [
+                "0fe80d0e287d0692"
+            ]
+        ]
+    },
+    {
+        "id": "b37129bd6fe1a1d6",
+        "type": "OpcUa-Item",
+        "z": "7a42aa29ee8ae8b9",
+        "g": "9e476e75a2225af1",
+        "item": "ns=2;s=_sensor1;datatype=Boolean",
+        "datatype": "Boolean",
+        "value": "0",
+        "name": "_sensor1",
+        "x": 540,
+        "y": 280,
+        "wires": [
+            [
+                "0fe80d0e287d0692"
+            ]
+        ]
+    },
+    {
+        "id": "ac146732d262e8f7",
+        "type": "OpcUa-Item",
+        "z": "7a42aa29ee8ae8b9",
+        "g": "9e476e75a2225af1",
+        "item": "ns=2;s=_sensor2;datatype=Boolean",
+        "datatype": "Boolean",
+        "value": "0",
+        "name": "_sensor2",
+        "x": 540,
+        "y": 380,
+        "wires": [
+            [
+                "0fe80d0e287d0692"
+            ]
+        ]
+    },
+    {
+        "id": "0270d6373b514395",
+        "type": "OpcUa-Item",
+        "z": "7a42aa29ee8ae8b9",
+        "g": "9e476e75a2225af1",
+        "item": "ns=2;s=_conveyor0;datatype=Boolean;value=false",
+        "datatype": "Boolean",
+        "value": "",
+        "name": "_conveyor0",
+        "x": 550,
+        "y": 480,
+        "wires": [
+            [
+                "0fe80d0e287d0692"
+            ]
+        ]
+    },
+    {
+        "id": "8f03d082ee772069",
+        "type": "OpcUa-Item",
+        "z": "7a42aa29ee8ae8b9",
+        "g": "9e476e75a2225af1",
+        "item": "ns=2;s=_conveyor1;datatype=Boolean;value=false",
+        "datatype": "Boolean",
+        "value": "",
+        "name": "_conveyor1",
+        "x": 550,
+        "y": 540,
+        "wires": [
+            [
+                "0fe80d0e287d0692"
+            ]
+        ]
+    },
+    {
+        "id": "0b449f9a99929730",
+        "type": "OpcUa-Item",
+        "z": "7a42aa29ee8ae8b9",
+        "g": "9e476e75a2225af1",
+        "item": "ns=2;s=_conveyor2;datatype=Boolean;value=false",
+        "datatype": "Boolean",
+        "value": "",
+        "name": "_conveyor2",
+        "x": 550,
+        "y": 600,
+        "wires": [
+            [
+                "0fe80d0e287d0692"
+            ]
+        ]
+    },
+    {
+        "id": "7dc4a4cd61ec6fe1",
+        "type": "OpcUa-Item",
+        "z": "7a42aa29ee8ae8b9",
+        "g": "9e476e75a2225af1",
+        "item": "ns=2;s=_conveyor3a;datatype=Boolean;value=false",
+        "datatype": "Boolean",
+        "value": "",
+        "name": "_conveyor3a",
+        "x": 550,
+        "y": 680,
+        "wires": [
+            [
+                "0fe80d0e287d0692"
+            ]
+        ]
+    },
+    {
+        "id": "b6671fb3b3800fa3",
+        "type": "OpcUa-Item",
+        "z": "7a42aa29ee8ae8b9",
+        "g": "9e476e75a2225af1",
+        "item": "ns=2;s=_conveyor3b;datatype=Boolean;value=false",
+        "datatype": "Boolean",
+        "value": "",
+        "name": "_conveyor3b",
+        "x": 550,
+        "y": 740,
+        "wires": [
+            [
+                "0fe80d0e287d0692"
+            ]
+        ]
+    },
+    {
+        "id": "1091ad3f6e33a5dc",
+        "type": "inject",
+        "z": "7a42aa29ee8ae8b9",
+        "g": "9e476e75a2225af1",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{\"opcuaCommand\":\"addVariable\"}",
+        "payloadType": "json",
+        "x": 190,
+        "y": 560,
+        "wires": [
+            [
+                "0b132e4bee3235c9",
+                "b37129bd6fe1a1d6",
+                "ac146732d262e8f7",
+                "0270d6373b514395",
+                "8f03d082ee772069",
+                "0b449f9a99929730",
+                "7dc4a4cd61ec6fe1",
+                "b6671fb3b3800fa3",
+                "74b9695eb9e15277",
+                "81b8d95da0460708",
+                "fdeb2a0f6e07aeb7",
+                "c8114cddd9b45dc9"
+            ]
+        ]
+    },
+    {
+        "id": "22ba1265b1aa9b27",
+        "type": "function",
+        "z": "7a42aa29ee8ae8b9",
+        "name": "Specify current sensor",
+        "func": "let sensor_no = flow.get(\"sensor_no\")\n\nmsg.topic = \"ns=2;s=_sensor\"+ sensor_no +\";datatype=Boolean\"\nreturn msg",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1940,
+        "y": 420,
+        "wires": [
+            [
+                "5df04f043f50405a"
+            ]
+        ]
+    },
+    {
+        "id": "5df04f043f50405a",
+        "type": "OpcUa-Client",
+        "z": "7a42aa29ee8ae8b9",
+        "endpoint": "df2f1b827a0d1854",
+        "action": "read",
+        "deadbandtype": "a",
+        "deadbandvalue": 1,
+        "time": 10,
+        "timeUnit": "s",
+        "certificate": "n",
+        "localfile": "",
+        "localkeyfile": "",
+        "securitymode": "None",
+        "securitypolicy": "None",
+        "folderName4PKI": "",
+        "name": "",
+        "x": 2160,
+        "y": 420,
+        "wires": [
+            [
+                "650f6fc5c5daf4e3"
+            ]
+        ]
+    },
+    {
+        "id": "650f6fc5c5daf4e3",
+        "type": "function",
+        "z": "7a42aa29ee8ae8b9",
+        "name": "Track order status",
+        "func": "let sensor_no = flow.get(\"sensor_no\")\nlet order_no = flow.get(\"orders\")\nlet complete_orders = flow.get(\"completed_orders\")\nlet prevSenReading = flow.get(\"previousSensorReading\")\nmsg.completeFlavor = \"false\";\nmsg.completeOrder = \"false\";\n\nif(msg.payload & !prevSenReading){\n    prevSenReading = true\n    complete_orders[sensor_no] += 1\n    flow.set(\"completed_orders\", complete_orders)\n} else{\n    prevSenReading = false\n}\n\nif(complete_orders[sensor_no] >= order_no[sensor_no]){\n        // Turn on conveyor here\n        sensor_no += 1\n        if(sensor_no >= order_no.length){\n            msg.completeOrder = \"true\";\n        }\n        flow.set(\"sensor_no\", sensor_no)\n        msg.completeFlavor = \"true\"\n}\nflow.set(\"previousSensorReading\", prevSenReading)\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 2390,
+        "y": 420,
+        "wires": [
+            [
+                "b783e80fa35dcfc7",
+                "7b73d5203f90a2d5",
+                "e2beae370fc6f254"
+            ]
+        ]
+    },
+    {
+        "id": "d0de93ee466f0f3e",
+        "type": "OpcUa-Client",
+        "z": "7a42aa29ee8ae8b9",
+        "endpoint": "df2f1b827a0d1854",
+        "action": "write",
+        "deadbandtype": "a",
+        "deadbandvalue": 1,
+        "time": 10,
+        "timeUnit": "s",
+        "certificate": "n",
+        "localfile": "",
+        "localkeyfile": "",
+        "securitymode": "None",
+        "securitypolicy": "None",
+        "folderName4PKI": "",
+        "name": "",
+        "x": 3280,
+        "y": 420,
+        "wires": [
+            [
+                "5860a863893052ba"
+            ]
+        ]
+    },
+    {
+        "id": "74b9695eb9e15277",
+        "type": "OpcUa-Item",
+        "z": "7a42aa29ee8ae8b9",
+        "g": "9e476e75a2225af1",
+        "item": "ns=2;s=_Emitter0;datatype=Boolean;value=false",
+        "datatype": "Boolean",
+        "value": "0",
+        "name": "_Emitter0",
+        "x": 540,
+        "y": 800,
+        "wires": [
+            [
+                "0fe80d0e287d0692"
+            ]
+        ]
+    },
+    {
+        "id": "81b8d95da0460708",
+        "type": "OpcUa-Item",
+        "z": "7a42aa29ee8ae8b9",
+        "g": "9e476e75a2225af1",
+        "item": "ns=2;s=_Emitter1;datatype=Boolean;value=false",
+        "datatype": "Boolean",
+        "value": "0",
+        "name": "_Emitter1",
+        "x": 540,
+        "y": 860,
+        "wires": [
+            [
+                "0fe80d0e287d0692"
+            ]
+        ]
+    },
+    {
+        "id": "fdeb2a0f6e07aeb7",
+        "type": "OpcUa-Item",
+        "z": "7a42aa29ee8ae8b9",
+        "g": "9e476e75a2225af1",
+        "item": "ns=2;s=_Emitter2;datatype=Boolean;value=false",
+        "datatype": "Boolean",
+        "value": "0",
+        "name": "_Emitter2",
+        "x": 540,
+        "y": 920,
+        "wires": [
+            [
+                "0fe80d0e287d0692"
+            ]
+        ]
+    },
+    {
+        "id": "469b634c7d8b11d2",
+        "type": "OpcUa-Client",
+        "z": "7a42aa29ee8ae8b9",
+        "endpoint": "df2f1b827a0d1854",
+        "action": "write",
+        "deadbandtype": "a",
+        "deadbandvalue": 1,
+        "time": 10,
+        "timeUnit": "s",
+        "certificate": "n",
+        "localfile": "",
+        "localkeyfile": "",
+        "securitymode": "None",
+        "securitypolicy": "None",
+        "folderName4PKI": "",
+        "name": "",
+        "x": 3740,
+        "y": 420,
+        "wires": [
+            [
+                "7c917c8721edbd73"
+            ]
+        ]
+    },
+    {
+        "id": "b783e80fa35dcfc7",
+        "type": "switch",
+        "z": "7a42aa29ee8ae8b9",
+        "name": "Check if a flavor is complete",
+        "property": "completeFlavor",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "true",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 2620,
+        "y": 420,
+        "wires": [
+            [
+                "316905e6b3696701",
+                "fe5f9637919fb1ee"
+            ]
+        ]
+    },
+    {
+        "id": "3509640810128423",
+        "type": "change",
+        "z": "7a42aa29ee8ae8b9",
+        "name": "Start conveyor belt",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "true",
+                "tot": "bool"
+            },
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "ns=2;s=_conveyor3a;datatype=Boolean",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 3090,
+        "y": 420,
+        "wires": [
+            [
+                "d0de93ee466f0f3e"
+            ]
+        ]
+    },
+    {
+        "id": "316905e6b3696701",
+        "type": "delay",
+        "z": "7a42aa29ee8ae8b9",
+        "name": "Await box fall",
+        "pauseType": "delay",
+        "timeout": "1.65",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 2870,
+        "y": 420,
+        "wires": [
+            [
+                "3509640810128423"
+            ]
+        ]
+    },
+    {
+        "id": "7b7059dd72a20af0",
+        "type": "trigger",
+        "z": "7a42aa29ee8ae8b9",
+        "name": "Polling loop",
+        "op1": "",
+        "op2": "",
+        "op1type": "date",
+        "op2type": "date",
+        "duration": "-600",
+        "extend": false,
+        "overrideDelay": false,
+        "units": "ms",
+        "reset": "",
+        "bytopic": "all",
+        "topic": "topic",
+        "outputs": 1,
+        "x": 1730,
+        "y": 420,
+        "wires": [
+            [
+                "22ba1265b1aa9b27"
+            ]
+        ]
+    },
+    {
+        "id": "7b73d5203f90a2d5",
+        "type": "switch",
+        "z": "7a42aa29ee8ae8b9",
+        "name": "Check if order is complete",
+        "property": "completeOrder",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "true",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 2610,
+        "y": 540,
+        "wires": [
+            [
+                "2b2fb021cf12f840"
+            ]
+        ]
+    },
+    {
+        "id": "5fd871d52ea4d6fb",
+        "type": "change",
+        "z": "7a42aa29ee8ae8b9",
+        "name": "Start second conveyor belt",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "true",
+                "tot": "bool"
+            },
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "ns=2;s=_conveyor3b;datatype=Boolean",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 3060,
+        "y": 540,
+        "wires": [
+            [
+                "25a44d31dd900bd0"
+            ]
+        ]
+    },
+    {
+        "id": "2b2fb021cf12f840",
+        "type": "delay",
+        "z": "7a42aa29ee8ae8b9",
+        "name": "Await box fall",
+        "pauseType": "delay",
+        "timeout": "2",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 2830,
+        "y": 540,
+        "wires": [
+            [
+                "5fd871d52ea4d6fb"
+            ]
+        ]
+    },
+    {
+        "id": "25a44d31dd900bd0",
+        "type": "OpcUa-Client",
+        "z": "7a42aa29ee8ae8b9",
+        "endpoint": "df2f1b827a0d1854",
+        "action": "write",
+        "deadbandtype": "a",
+        "deadbandvalue": 1,
+        "time": 10,
+        "timeUnit": "s",
+        "certificate": "n",
+        "localfile": "",
+        "localkeyfile": "",
+        "securitymode": "None",
+        "securitypolicy": "None",
+        "folderName4PKI": "",
+        "name": "",
+        "x": 3300,
+        "y": 540,
+        "wires": [
+            [
+                "d8831ea3fd1d75c3"
+            ]
+        ]
+    },
+    {
+        "id": "9e5f2b44e75f19ec",
+        "type": "OpcUa-Client",
+        "z": "7a42aa29ee8ae8b9",
+        "endpoint": "df2f1b827a0d1854",
+        "action": "write",
+        "deadbandtype": "a",
+        "deadbandvalue": 1,
+        "time": 10,
+        "timeUnit": "s",
+        "certificate": "n",
+        "localfile": "",
+        "localkeyfile": "",
+        "securitymode": "None",
+        "securitypolicy": "None",
+        "folderName4PKI": "",
+        "name": "",
+        "x": 3840,
+        "y": 540,
+        "wires": [
+            [
+                "fe5f9637919fb1ee"
+            ]
+        ]
+    },
+    {
+        "id": "fe5f9637919fb1ee",
+        "type": "change",
+        "z": "7a42aa29ee8ae8b9",
+        "name": "Reset polling loop",
+        "rules": [
+            {
+                "t": "set",
+                "p": "reset",
+                "pt": "msg",
+                "to": "",
+                "tot": "date"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1510,
+        "y": 200,
+        "wires": [
+            [
+                "7b7059dd72a20af0"
+            ]
+        ]
+    },
+    {
+        "id": "7c917c8721edbd73",
+        "type": "change",
+        "z": "7a42aa29ee8ae8b9",
+        "name": "Restarts polling loop",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "",
+                "tot": "date"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1520,
+        "y": 60,
+        "wires": [
+            [
+                "7b7059dd72a20af0"
+            ]
+        ]
+    },
+    {
+        "id": "1b629bed14cc9153",
+        "type": "ui_numeric",
+        "z": "7a42aa29ee8ae8b9",
+        "g": "b4260107117d8bc4",
+        "name": "White Lotus Picker",
+        "label": "White Lotus ",
+        "tooltip": "",
+        "group": "e0837400d3fb2dc8",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "wrap": false,
+        "passthru": false,
+        "topic": "payload",
+        "topicType": "msg",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "3",
+        "step": 1,
+        "className": "",
+        "x": 2070,
+        "y": 860,
+        "wires": [
+            [
+                "03d8fff2233bcbe4"
+            ]
+        ]
+    },
+    {
+        "id": "0d6f411336519cb4",
+        "type": "ui_numeric",
+        "z": "7a42aa29ee8ae8b9",
+        "g": "b4260107117d8bc4",
+        "name": "Red Bean Picker",
+        "label": "Red Bean",
+        "tooltip": "",
+        "group": "e0837400d3fb2dc8",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "wrap": false,
+        "passthru": false,
+        "topic": "payload",
+        "topicType": "msg",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "3",
+        "step": 1,
+        "className": "",
+        "x": 2070,
+        "y": 920,
+        "wires": [
+            [
+                "0940a4525b585659"
+            ]
+        ]
+    },
+    {
+        "id": "ec954aaf66c14a68",
+        "type": "ui_numeric",
+        "z": "7a42aa29ee8ae8b9",
+        "g": "b4260107117d8bc4",
+        "name": "Green Tea Picker",
+        "label": "Green Tea",
+        "tooltip": "",
+        "group": "e0837400d3fb2dc8",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "wrap": false,
+        "passthru": false,
+        "topic": "payload",
+        "topicType": "msg",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "3",
+        "step": 1,
+        "className": "",
+        "x": 2070,
+        "y": 980,
+        "wires": [
+            [
+                "0d65e3ae12e6bd45"
+            ]
+        ]
+    },
+    {
+        "id": "03d8fff2233bcbe4",
+        "type": "function",
+        "z": "7a42aa29ee8ae8b9",
+        "g": "b4260107117d8bc4",
+        "name": "Set White Lotus Amount",
+        "func": "let orders = flow.get(\"orders\")\norders[0] = msg.payload\nflow.set(\"orders\", orders)\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 2350,
+        "y": 860,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "0940a4525b585659",
+        "type": "function",
+        "z": "7a42aa29ee8ae8b9",
+        "g": "b4260107117d8bc4",
+        "name": "Set Red Bean Amount",
+        "func": "let orders = flow.get(\"orders\")\norders[1] = msg.payload\nflow.set(\"orders\", orders)\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 2340,
+        "y": 920,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "0d65e3ae12e6bd45",
+        "type": "function",
+        "z": "7a42aa29ee8ae8b9",
+        "g": "b4260107117d8bc4",
+        "name": "Set Green Tea Amount",
+        "func": "let orders = flow.get(\"orders\")\norders[2] = msg.payload\nflow.set(\"orders\", orders)\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 2340,
+        "y": 980,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "964b6613aaf0b739",
+        "type": "ui_button",
+        "z": "7a42aa29ee8ae8b9",
+        "g": "b4260107117d8bc4",
+        "name": "",
+        "group": "e0837400d3fb2dc8",
+        "order": 6,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Confirm",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 1260,
+        "y": 800,
+        "wires": [
+            [
+                "438f02c27b37031f",
+                "54131fe27f3873ad",
+                "45afae437bc7ace6",
+                "0120241bf4123d69"
+            ]
+        ]
+    },
+    {
+        "id": "438f02c27b37031f",
+        "type": "function",
+        "z": "7a42aa29ee8ae8b9",
+        "g": "b4260107117d8bc4",
+        "name": "Disable input upon accepting order",
+        "func": "msg.enabled = false;\ndelete msg.payload;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1620,
+        "y": 800,
+        "wires": [
+            [
+                "1b629bed14cc9153",
+                "0d6f411336519cb4",
+                "ec954aaf66c14a68",
+                "964b6613aaf0b739"
+            ]
+        ]
+    },
+    {
+        "id": "39be2a3db018f430",
+        "type": "ui_button",
+        "z": "7a42aa29ee8ae8b9",
+        "g": "b4260107117d8bc4",
+        "name": "",
+        "group": "e0837400d3fb2dc8",
+        "order": 7,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Reset",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 1250,
+        "y": 1140,
+        "wires": [
+            [
+                "b708faf521a06c7b",
+                "255e09f21cb01c31"
+            ]
+        ]
+    },
+    {
+        "id": "b708faf521a06c7b",
+        "type": "function",
+        "z": "7a42aa29ee8ae8b9",
+        "g": "b4260107117d8bc4",
+        "name": "Enable input upon reset",
+        "func": "msg.enabled = true;\nmsg.payload = \"\"\nflow.set(\"orders\",[0,0,0]);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1510,
+        "y": 1140,
+        "wires": [
+            [
+                "0d6f411336519cb4",
+                "1b629bed14cc9153",
+                "ec954aaf66c14a68",
+                "964b6613aaf0b739"
+            ]
+        ]
+    },
+    {
+        "id": "66f691e5e8d9aeac",
+        "type": "ui_text",
+        "z": "7a42aa29ee8ae8b9",
+        "g": "b4260107117d8bc4",
+        "group": "e0837400d3fb2dc8",
+        "order": 8,
+        "width": 0,
+        "height": 0,
+        "name": "Status Indicator",
+        "label": "Status",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "x": 2060,
+        "y": 1040,
+        "wires": []
+    },
+    {
+        "id": "74018b4e89184a9f",
+        "type": "function",
+        "z": "7a42aa29ee8ae8b9",
+        "name": "Initialize Variables",
+        "func": "flow.set(\"sensor_no\",0)\nflow.set(\"completed_orders\", [0,0,0])\nflow.set(\"previousSensorReading\", false)\n\nmsg.payload = flow.get(\"completed_orders\")\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1530,
+        "y": 420,
+        "wires": [
+            [
+                "7b7059dd72a20af0"
+            ]
+        ]
+    },
+    {
+        "id": "e2beae370fc6f254",
+        "type": "switch",
+        "z": "7a42aa29ee8ae8b9",
+        "name": "Check if all sensors polled",
+        "property": "sensor_no",
+        "propertyType": "flow",
+        "rules": [
+            {
+                "t": "cont",
+                "v": "3",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 2610,
+        "y": 360,
+        "wires": [
+            [
+                "fe5f9637919fb1ee"
+            ]
+        ]
+    },
+    {
+        "id": "c8114cddd9b45dc9",
+        "type": "OpcUa-Item",
+        "z": "7a42aa29ee8ae8b9",
+        "g": "9e476e75a2225af1",
+        "item": "ns=2;s=_Emitter3;datatype=Boolean;value=false",
+        "datatype": "Boolean",
+        "value": "0",
+        "name": "_Emitter3",
+        "x": 540,
+        "y": 980,
+        "wires": [
+            [
+                "0fe80d0e287d0692"
+            ]
+        ]
+    },
+    {
+        "id": "54131fe27f3873ad",
+        "type": "change",
+        "z": "7a42aa29ee8ae8b9",
+        "name": "Start conveyor belt",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "true",
+                "tot": "bool"
+            },
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "ns=2;s=_conveyor3a;datatype=Boolean",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1530,
+        "y": 540,
+        "wires": [
+            [
+                "abf78808f7104aa1"
+            ]
+        ]
+    },
+    {
+        "id": "abf78808f7104aa1",
+        "type": "OpcUa-Client",
+        "z": "7a42aa29ee8ae8b9",
+        "endpoint": "df2f1b827a0d1854",
+        "action": "write",
+        "deadbandtype": "a",
+        "deadbandvalue": 1,
+        "time": 10,
+        "timeUnit": "s",
+        "certificate": "n",
+        "localfile": "",
+        "localkeyfile": "",
+        "securitymode": "None",
+        "securitypolicy": "None",
+        "folderName4PKI": "",
+        "name": "",
+        "x": 1760,
+        "y": 540,
+        "wires": [
+            [
+                "1ddbd6b60eb4d081"
+            ]
+        ]
+    },
+    {
+        "id": "cf3e330abd938466",
+        "type": "OpcUa-Client",
+        "z": "7a42aa29ee8ae8b9",
+        "endpoint": "df2f1b827a0d1854",
+        "action": "write",
+        "deadbandtype": "a",
+        "deadbandvalue": 1,
+        "time": 10,
+        "timeUnit": "s",
+        "certificate": "n",
+        "localfile": "",
+        "localkeyfile": "",
+        "securitymode": "None",
+        "securitypolicy": "None",
+        "folderName4PKI": "",
+        "name": "",
+        "x": 2380,
+        "y": 540,
+        "wires": [
+            [
+                "74018b4e89184a9f"
+            ]
+        ]
+    },
+    {
+        "id": "45afae437bc7ace6",
+        "type": "change",
+        "z": "7a42aa29ee8ae8b9",
+        "g": "b4260107117d8bc4",
+        "name": "Notify Order success",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "Order is successful",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1580,
+        "y": 880,
+        "wires": [
+            [
+                "66f691e5e8d9aeac"
+            ]
+        ]
+    },
+    {
+        "id": "255e09f21cb01c31",
+        "type": "change",
+        "z": "7a42aa29ee8ae8b9",
+        "g": "b4260107117d8bc4",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1520,
+        "y": 1200,
+        "wires": [
+            [
+                "66f691e5e8d9aeac"
+            ]
+        ]
+    },
+    {
+        "id": "0120241bf4123d69",
+        "type": "change",
+        "z": "7a42aa29ee8ae8b9",
+        "name": "Emit new stackable box",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "true",
+                "tot": "bool"
+            },
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "ns=2;s=_Emitter3;datatype=Boolean",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1550,
+        "y": 620,
+        "wires": [
+            [
+                "525e2e38a4615d20"
+            ]
+        ]
+    },
+    {
+        "id": "525e2e38a4615d20",
+        "type": "OpcUa-Client",
+        "z": "7a42aa29ee8ae8b9",
+        "endpoint": "df2f1b827a0d1854",
+        "action": "write",
+        "deadbandtype": "a",
+        "deadbandvalue": 1,
+        "time": 10,
+        "timeUnit": "s",
+        "certificate": "n",
+        "localfile": "",
+        "localkeyfile": "",
+        "securitymode": "None",
+        "securitypolicy": "None",
+        "folderName4PKI": "",
+        "name": "",
+        "x": 1780,
+        "y": 620,
+        "wires": [
+            [
+                "aad19c8745e3ac3b"
+            ]
+        ]
+    },
+    {
+        "id": "6913e595347e3852",
+        "type": "OpcUa-Client",
+        "z": "7a42aa29ee8ae8b9",
+        "endpoint": "df2f1b827a0d1854",
+        "action": "write",
+        "deadbandtype": "a",
+        "deadbandvalue": 1,
+        "time": 10,
+        "timeUnit": "s",
+        "certificate": "n",
+        "localfile": "",
+        "localkeyfile": "",
+        "securitymode": "None",
+        "securitypolicy": "None",
+        "folderName4PKI": "",
+        "name": "",
+        "x": 2360,
+        "y": 620,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "aad19c8745e3ac3b",
+        "type": "subflow:023d3c161439f2e9",
+        "z": "7a42aa29ee8ae8b9",
+        "name": "Stop emitting stackable boxes",
+        "x": 2050,
+        "y": 620,
+        "wires": [
+            [
+                "6913e595347e3852"
+            ]
+        ]
+    },
+    {
+        "id": "1ddbd6b60eb4d081",
+        "type": "subflow:023d3c161439f2e9",
+        "z": "7a42aa29ee8ae8b9",
+        "name": "Let box move and stop conveyor belt",
+        "env": [
+            {
+                "name": "DELAY",
+                "value": "3",
+                "type": "str"
+            }
+        ],
+        "x": 2070,
+        "y": 540,
+        "wires": [
+            [
+                "cf3e330abd938466"
+            ]
+        ]
+    },
+    {
+        "id": "d8831ea3fd1d75c3",
+        "type": "subflow:023d3c161439f2e9",
+        "z": "7a42aa29ee8ae8b9",
+        "name": "Stop second conveyor belt after wait",
+        "env": [
+            {
+                "name": "DELAY",
+                "value": "3",
+                "type": "str"
+            }
+        ],
+        "x": 3570,
+        "y": 540,
+        "wires": [
+            [
+                "9e5f2b44e75f19ec"
+            ]
+        ]
+    },
+    {
+        "id": "5860a863893052ba",
+        "type": "subflow:023d3c161439f2e9",
+        "z": "7a42aa29ee8ae8b9",
+        "name": "Stop conveyor belt",
+        "env": [
+            {
+                "name": "DELAY",
+                "value": "3.9",
+                "type": "str"
+            }
+        ],
+        "x": 3490,
+        "y": 420,
+        "wires": [
+            [
+                "469b634c7d8b11d2"
+            ]
+        ]
+    },
+    {
+        "id": "df2f1b827a0d1854",
+        "type": "OpcUa-Endpoint",
+        "endpoint": "opc.tcp://127.0.0.1:53880",
+        "secpol": "None",
+        "secmode": "None",
+        "none": false,
+        "login": false,
+        "usercert": false,
+        "usercertificate": "",
+        "userprivatekey": ""
+    },
+    {
+        "id": "e0837400d3fb2dc8",
+        "type": "ui_group",
+        "name": "Orders",
+        "tab": "b6e923ca53eecf8b",
+        "order": 1,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "b6e923ca53eecf8b",
+        "type": "ui_tab",
+        "name": "Home",
+        "icon": "dashboard",
+        "disabled": false,
+        "hidden": false
+    }
+]
