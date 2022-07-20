@@ -118,12 +118,14 @@
             "d484066f1af2a17a",
             "5cb8a18cdb39ba64",
             "02f12d4ebd41a80f",
-            "1ecc7bcc7267ceb9"
+            "1ecc7bcc7267ceb9",
+            "eaba63b69bc314fc",
+            "a255839ffd013d35"
         ],
         "x": 94,
         "y": 1119,
         "w": 912,
-        "h": 862
+        "h": 1002
     },
     {
         "id": "687ed382f2a511da",
@@ -368,7 +370,9 @@
                 "d484066f1af2a17a",
                 "5cb8a18cdb39ba64",
                 "02f12d4ebd41a80f",
-                "1ecc7bcc7267ceb9"
+                "1ecc7bcc7267ceb9",
+                "eaba63b69bc314fc",
+                "a255839ffd013d35"
             ]
         ]
     },
@@ -1819,7 +1823,7 @@
         "id": "b191a27b8dc9746e",
         "type": "switch",
         "z": "b96e85bed3b4466c",
-        "name": "Check if no orders",
+        "name": "Proceed only if there are orders",
         "property": "order_made",
         "propertyType": "msg",
         "rules": [
@@ -1832,7 +1836,7 @@
         "checkall": "true",
         "repair": false,
         "outputs": 1,
-        "x": 1130,
+        "x": 1170,
         "y": 460,
         "wires": [
             [
@@ -1955,7 +1959,7 @@
         "id": "71a1c69a3b7063ef",
         "type": "switch",
         "z": "b96e85bed3b4466c",
-        "name": "Proceed only if stopped",
+        "name": "Proceed only if not stopped",
         "property": "stopped",
         "propertyType": "msg",
         "rules": [
@@ -1968,7 +1972,7 @@
         "checkall": "true",
         "repair": false,
         "outputs": 1,
-        "x": 170,
+        "x": 180,
         "y": 300,
         "wires": [
             [
@@ -1976,6 +1980,187 @@
                 "06e9f01a7e89b8fa"
             ]
         ]
+    },
+    {
+        "id": "fcde74b9791f4ebd",
+        "type": "trigger",
+        "z": "b96e85bed3b4466c",
+        "name": "",
+        "op1": "1",
+        "op2": "0",
+        "op1type": "str",
+        "op2type": "str",
+        "duration": "-250",
+        "extend": false,
+        "overrideDelay": false,
+        "units": "ms",
+        "reset": "",
+        "bytopic": "all",
+        "topic": "topic",
+        "outputs": 1,
+        "x": 140,
+        "y": 740,
+        "wires": [
+            [
+                "6463a616431308cb",
+                "68d4203cefb70a26"
+            ]
+        ]
+    },
+    {
+        "id": "eaba63b69bc314fc",
+        "type": "OpcUa-Item",
+        "z": "b96e85bed3b4466c",
+        "g": "c1fd251844604729",
+        "item": "ns=2;s=_start_btn;datatype=Boolean;value=false",
+        "datatype": "Boolean",
+        "value": "0",
+        "name": "_start_btn",
+        "x": 540,
+        "y": 2020,
+        "wires": [
+            [
+                "8dc7282cac11063e"
+            ]
+        ]
+    },
+    {
+        "id": "a255839ffd013d35",
+        "type": "OpcUa-Item",
+        "z": "b96e85bed3b4466c",
+        "g": "c1fd251844604729",
+        "item": "ns=2;s=_stop_btn;datatype=Boolean;value=false",
+        "datatype": "Boolean",
+        "value": "0",
+        "name": "_stop_btn",
+        "x": 540,
+        "y": 2080,
+        "wires": [
+            [
+                "8dc7282cac11063e"
+            ]
+        ]
+    },
+    {
+        "id": "2e3cdff1ccfd0bb0",
+        "type": "OpcUa-Client",
+        "z": "b96e85bed3b4466c",
+        "endpoint": "df2f1b827a0d1854",
+        "action": "read",
+        "deadbandtype": "a",
+        "deadbandvalue": 1,
+        "time": 10,
+        "timeUnit": "s",
+        "certificate": "n",
+        "localfile": "",
+        "localkeyfile": "",
+        "securitymode": "None",
+        "securitypolicy": "None",
+        "folderName4PKI": "",
+        "name": "",
+        "x": 180,
+        "y": 440,
+        "wires": [
+            [
+                "5a5d7c85405b55c4",
+                "4614cbced9ff6a31"
+            ]
+        ]
+    },
+    {
+        "id": "6463a616431308cb",
+        "type": "change",
+        "z": "b96e85bed3b4466c",
+        "name": "Start ",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "ns=2;s=_start_btn;datatype=Boolean",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 310,
+        "y": 740,
+        "wires": [
+            [
+                "2e3cdff1ccfd0bb0"
+            ]
+        ]
+    },
+    {
+        "id": "68d4203cefb70a26",
+        "type": "change",
+        "z": "b96e85bed3b4466c",
+        "name": "Stop",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "ns=2;s=_stop_btn;datatype=Boolean",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 330,
+        "y": 820,
+        "wires": [
+            [
+                "eb6ac626910eabed"
+            ]
+        ]
+    },
+    {
+        "id": "eb6ac626910eabed",
+        "type": "OpcUa-Client",
+        "z": "b96e85bed3b4466c",
+        "endpoint": "df2f1b827a0d1854",
+        "action": "read",
+        "deadbandtype": "a",
+        "deadbandvalue": 1,
+        "time": 10,
+        "timeUnit": "s",
+        "certificate": "n",
+        "localfile": "",
+        "localkeyfile": "",
+        "securitymode": "None",
+        "securitypolicy": "None",
+        "folderName4PKI": "",
+        "name": "",
+        "x": 580,
+        "y": 760,
+        "wires": [
+            [
+                "b0c2d38cac8a17ce"
+            ]
+        ]
+    },
+    {
+        "id": "4614cbced9ff6a31",
+        "type": "debug",
+        "z": "b96e85bed3b4466c",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 370,
+        "y": 560,
+        "wires": []
     },
     {
         "id": "df2f1b827a0d1854",
