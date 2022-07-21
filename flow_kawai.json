@@ -121,12 +121,13 @@
             "f9c4d436606b2e54",
             "3976dc32e4b0587a",
             "39ac19acef68737d",
-            "4cf53e3e68033c95"
+            "4cf53e3e68033c95",
+            "cec574f4fee88665"
         ],
         "x": 114,
         "y": 1119,
         "w": 912,
-        "h": 1002
+        "h": 1042
     },
     {
         "id": "7e6ca51db4dee75c",
@@ -374,7 +375,8 @@
                 "f9c4d436606b2e54",
                 "3976dc32e4b0587a",
                 "39ac19acef68737d",
-                "4cf53e3e68033c95"
+                "4cf53e3e68033c95",
+                "cec574f4fee88665"
             ]
         ]
     },
@@ -786,7 +788,8 @@
         "y": 480,
         "wires": [
             [
-                "539f82e4c5730487"
+                "539f82e4c5730487",
+                "5ceca8112ec8b39e"
             ]
         ]
     },
@@ -2023,7 +2026,7 @@
         "value": "",
         "name": "_start_btn",
         "x": 560,
-        "y": 2020,
+        "y": 2060,
         "wires": [
             [
                 "f79036bea7bace3d"
@@ -2040,7 +2043,7 @@
         "value": "",
         "name": "_stop_btn",
         "x": 560,
-        "y": 2080,
+        "y": 2120,
         "wires": [
             [
                 "f79036bea7bace3d"
@@ -2491,6 +2494,118 @@
         "wires": [
             [
                 "f79036bea7bace3d"
+            ]
+        ]
+    },
+    {
+        "id": "cec574f4fee88665",
+        "type": "OpcUa-Item",
+        "z": "93b91e7b83d34ec8",
+        "g": "6b9158c2e0dbe168",
+        "item": "ns=2;s=_Remover;datatype=Boolean;value=false",
+        "datatype": "Boolean",
+        "value": "0",
+        "name": "_Remover",
+        "x": 570,
+        "y": 2000,
+        "wires": [
+            [
+                "f79036bea7bace3d"
+            ]
+        ]
+    },
+    {
+        "id": "5ceca8112ec8b39e",
+        "type": "change",
+        "z": "93b91e7b83d34ec8",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "true",
+                "tot": "bool"
+            },
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "ns=2;s=_Remover;datatype=Boolean",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 4120,
+        "y": 620,
+        "wires": [
+            [
+                "1ac2631fdf739bf8"
+            ]
+        ]
+    },
+    {
+        "id": "379fd99121a4bc03",
+        "type": "subflow:e14103932ef35805",
+        "z": "93b91e7b83d34ec8",
+        "name": "Stop Receiver after wait",
+        "x": 4570,
+        "y": 620,
+        "wires": [
+            [
+                "2a6035cbce0c0d38"
+            ]
+        ]
+    },
+    {
+        "id": "2a6035cbce0c0d38",
+        "type": "OpcUa-Client",
+        "z": "93b91e7b83d34ec8",
+        "endpoint": "df2f1b827a0d1854",
+        "action": "write",
+        "deadbandtype": "a",
+        "deadbandvalue": 1,
+        "time": 10,
+        "timeUnit": "s",
+        "certificate": "n",
+        "localfile": "",
+        "localkeyfile": "",
+        "securitymode": "None",
+        "securitypolicy": "None",
+        "folderName4PKI": "",
+        "name": "OPC UA Client: Receiver",
+        "x": 4810,
+        "y": 620,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "1ac2631fdf739bf8",
+        "type": "OpcUa-Client",
+        "z": "93b91e7b83d34ec8",
+        "endpoint": "df2f1b827a0d1854",
+        "action": "write",
+        "deadbandtype": "a",
+        "deadbandvalue": 1,
+        "time": 10,
+        "timeUnit": "s",
+        "certificate": "n",
+        "localfile": "",
+        "localkeyfile": "",
+        "securitymode": "None",
+        "securitypolicy": "None",
+        "folderName4PKI": "",
+        "name": "OPC UA Client: Receiver",
+        "x": 4330,
+        "y": 620,
+        "wires": [
+            [
+                "379fd99121a4bc03"
             ]
         ]
     },
