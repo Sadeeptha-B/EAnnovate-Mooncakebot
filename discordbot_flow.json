@@ -1,6 +1,6 @@
 [
     {
-        "id": "111ebab39c232114",
+        "id": "82ac7097160d24ce",
         "type": "tab",
         "label": "Discord-bot",
         "disabled": false,
@@ -8,18 +8,18 @@
         "env": []
     },
     {
-        "id": "44f8998afc029d1b",
+        "id": "df56f7f0efc8f769",
         "type": "group",
-        "z": "111ebab39c232114",
+        "z": "82ac7097160d24ce",
         "name": "Initialize database",
         "style": {
             "label": true
         },
         "nodes": [
-            "57b8073b5474fac3",
-            "592a2efc1cfa686e",
-            "e38dea317a97b54d",
-            "4d03302012aac62c"
+            "68c36c95fc94ba1a",
+            "0dcc0cd911d8233d",
+            "50f6244f85fa3c8b",
+            "9b36f14287da3363"
         ],
         "x": 94,
         "y": 1439,
@@ -27,36 +27,36 @@
         "h": 182
     },
     {
-        "id": "9d6aebaf3b188385",
+        "id": "69b8a823f9b26e40",
         "type": "discordMessage",
-        "z": "111ebab39c232114",
+        "z": "82ac7097160d24ce",
         "name": "",
         "token": "",
         "x": 160,
         "y": 500,
         "wires": [
             [
-                "da876eed5ed12aed"
+                "76d1edcaad5ca8bd"
             ]
         ]
     },
     {
-        "id": "4e5b0f6ce0f228d0",
+        "id": "dc8864ed85892f96",
         "type": "discordMessageManager",
-        "z": "111ebab39c232114",
+        "z": "82ac7097160d24ce",
         "name": "",
         "channel": "",
         "token": "",
-        "x": 1830,
-        "y": 400,
+        "x": 1990,
+        "y": 440,
         "wires": [
             []
         ]
     },
     {
-        "id": "4f6924885c7351dd",
+        "id": "e21d3811c38d1777",
         "type": "change",
-        "z": "111ebab39c232114",
+        "z": "82ac7097160d24ce",
         "name": "Respond to !order",
         "rules": [
             {
@@ -83,14 +83,14 @@
         "y": 540,
         "wires": [
             [
-                "6ba1db2a820b1759"
+                "9c015bcbcb80763d"
             ]
         ]
     },
     {
-        "id": "6ba1db2a820b1759",
+        "id": "9c015bcbcb80763d",
         "type": "json",
-        "z": "111ebab39c232114",
+        "z": "82ac7097160d24ce",
         "name": "Convert to JSON to JS obj",
         "property": "components",
         "action": "obj",
@@ -99,14 +99,14 @@
         "y": 540,
         "wires": [
             [
-                "4e5b0f6ce0f228d0"
+                "dc8864ed85892f96"
             ]
         ]
     },
     {
-        "id": "096153183f0fb378",
+        "id": "45ebf65158221e75",
         "type": "discordInteraction",
-        "z": "111ebab39c232114",
+        "z": "82ac7097160d24ce",
         "name": "MoonCake Menu Selection ",
         "token": "",
         "interactionType": "selectMenu",
@@ -117,14 +117,14 @@
         "y": 760,
         "wires": [
             [
-                "1d6867441084f44f"
+                "7649fe7726ee9ef6"
             ]
         ]
     },
     {
-        "id": "eb6e4c97d19be345",
+        "id": "39e43ad6c2114d12",
         "type": "change",
-        "z": "111ebab39c232114",
+        "z": "82ac7097160d24ce",
         "name": "Respond to !help",
         "rules": [
             {
@@ -151,14 +151,14 @@
         "y": 420,
         "wires": [
             [
-                "4e5b0f6ce0f228d0"
+                "dc8864ed85892f96"
             ]
         ]
     },
     {
-        "id": "dc9302301b143b50",
+        "id": "0f5612e47c98fc0e",
         "type": "change",
-        "z": "111ebab39c232114",
+        "z": "82ac7097160d24ce",
         "name": "Respond to !menu",
         "rules": [
             {
@@ -185,14 +185,14 @@
         "y": 480,
         "wires": [
             [
-                "4e5b0f6ce0f228d0"
+                "dc8864ed85892f96"
             ]
         ]
     },
     {
-        "id": "e191276dbf480184",
+        "id": "beb4146cd3122ecf",
         "type": "function",
-        "z": "111ebab39c232114",
+        "z": "82ac7097160d24ce",
         "name": "Display Quantity Selection",
         "func": "const orderLimit = 10;\n\nconst createOptionRange = () => {\n    const options = []\n    for (i =0; i<orderLimit; i++){\n        options.push({\"value\": `${i+1}`, \"label\": `${i+1}`})\n    }\n    return options\n}\n\nmsg.components = [\n    {\n        \"type\": 1,\n        \"components\": [\n            {\n                \"type\": 3,\n                \"custom_id\": `quantity${msg.payload.replace(/\\s/g, \"\")}`,\n                \"options\": createOptionRange(),\n                \"placeholder\": \"Choose your order\",\n                \"min_values\": 1,\n                \"max_values\": 1\n            }\n        ]\n    }\n]\n\nconst orderItemAmount = flow.get(msg.user)\norderItemAmount.orderItems += 1\nflow.set(msg.user, orderItemAmount)\n\nmsg.payload = `How many ${msg.payload} Mooncakes do you need?`\n\n\nreturn msg;",
         "outputs": 1,
@@ -200,18 +200,18 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 970,
+        "x": 1010,
         "y": 760,
         "wires": [
             [
-                "28f9cd41aa195b3a"
+                "e5898b8ad784b1f9"
             ]
         ]
     },
     {
-        "id": "1d6867441084f44f",
+        "id": "7649fe7726ee9ef6",
         "type": "change",
-        "z": "111ebab39c232114",
+        "z": "82ac7097160d24ce",
         "name": "Extract ordered items and user",
         "rules": [
             {
@@ -238,16 +238,16 @@
         "y": 760,
         "wires": [
             [
-                "47e14cd34de36e25",
-                "7e97ec37652641b7",
-                "3f46964241099949"
+                "be0816b98b1a75c5",
+                "83041eb3e8bc41db",
+                "e162864344e8a3aa"
             ]
         ]
     },
     {
-        "id": "47e14cd34de36e25",
+        "id": "be0816b98b1a75c5",
         "type": "split",
-        "z": "111ebab39c232114",
+        "z": "82ac7097160d24ce",
         "name": "Send each item",
         "splt": "\\n",
         "spltType": "str",
@@ -259,14 +259,14 @@
         "y": 760,
         "wires": [
             [
-                "e191276dbf480184"
+                "beb4146cd3122ecf"
             ]
         ]
     },
     {
-        "id": "7e97ec37652641b7",
+        "id": "83041eb3e8bc41db",
         "type": "function",
-        "z": "111ebab39c232114",
+        "z": "82ac7097160d24ce",
         "name": "Start new order",
         "func": "const date = new Date()\n\nmsg.embeds ={\n    \"title\": \"New Order:\",\n    \"description\": `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`,\n    \"color\": \"#DE5E1F\"\n}\n\nflow.set(msg.user, {\"orderItems\":0})\n\nreturn msg;",
         "outputs": 1,
@@ -274,18 +274,18 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 780,
-        "y": 680,
+        "x": 760,
+        "y": 700,
         "wires": [
             [
-                "28f9cd41aa195b3a"
+                "e5898b8ad784b1f9"
             ]
         ]
     },
     {
-        "id": "83079b48878a09f8",
+        "id": "ce499d0481cf321e",
         "type": "discordInteraction",
-        "z": "111ebab39c232114",
+        "z": "82ac7097160d24ce",
         "name": "QuantitySelection",
         "token": "",
         "interactionType": "selectMenu",
@@ -296,14 +296,14 @@
         "y": 980,
         "wires": [
             [
-                "db637fce733d6256"
+                "45fd4461a2b5ddce"
             ]
         ]
     },
     {
-        "id": "db637fce733d6256",
+        "id": "45fd4461a2b5ddce",
         "type": "function",
-        "z": "111ebab39c232114",
+        "z": "82ac7097160d24ce",
         "name": "Save selections to context store",
         "func": "const item = msg.payload.customId.replace('quantity', '')\nconst quantity = parseInt(msg.payload.values[0])\n\nconst userOrder = flow.get(msg.payload.user.id);\n\nif (userOrder[item] === undefined){\n    userOrder[item] = {\n        \"quantity\": quantity,\n        \"selection\": 1\n    }\n} else{\n    userOrder[item].quantity = quantity\n}\n\nflow.set(msg.payload.user.id, userOrder)\n\nreturn msg;",
         "outputs": 1,
@@ -318,9 +318,9 @@
         ]
     },
     {
-        "id": "3f46964241099949",
+        "id": "e162864344e8a3aa",
         "type": "change",
-        "z": "111ebab39c232114",
+        "z": "82ac7097160d24ce",
         "name": "Send submit button",
         "rules": [
             {
@@ -344,33 +344,33 @@
         "to": "",
         "reg": false,
         "x": 770,
-        "y": 840,
+        "y": 820,
         "wires": [
             [
-                "932071036365f651"
+                "73d9740b596c895b"
             ]
         ]
     },
     {
-        "id": "932071036365f651",
+        "id": "73d9740b596c895b",
         "type": "json",
-        "z": "111ebab39c232114",
+        "z": "82ac7097160d24ce",
         "name": "",
         "property": "components",
         "action": "obj",
         "pretty": false,
         "x": 990,
-        "y": 840,
+        "y": 820,
         "wires": [
             [
-                "28f9cd41aa195b3a"
+                "e5898b8ad784b1f9"
             ]
         ]
     },
     {
-        "id": "13e4b421a105a10d",
+        "id": "388797b61f4bbb6d",
         "type": "discordInteraction",
-        "z": "111ebab39c232114",
+        "z": "82ac7097160d24ce",
         "name": "Submit Button Interaction",
         "token": "",
         "interactionType": "button",
@@ -381,14 +381,14 @@
         "y": 1120,
         "wires": [
             [
-                "53f8e14d14ce3d66"
+                "8c70449a670039c7"
             ]
         ]
     },
     {
-        "id": "53f8e14d14ce3d66",
+        "id": "8c70449a670039c7",
         "type": "function",
-        "z": "111ebab39c232114",
+        "z": "82ac7097160d24ce",
         "name": "Obtain the order",
         "func": "const menu = [\"WhiteLotus\", \"RedBean\", \"GreenTea\"],\n      menuRecord = flow.get(msg.payload.user.id),\n      date = new Date().getTime()\n      \nmsg.orderComplete = \"false\"\n\nlet orderCount = 0\n    selectedItems = []\n\n\nfor (let i=0; i<menu.length; i++){\n    let item = menu[i]\n    if (menuRecord[item] !== undefined){\n        orderCount += menuRecord[item].selection\n        let itemObj = {}\n        itemObj[item]=menuRecord[item].quantity\n        selectedItems.push(itemObj)\n    }\n}\n\nif (orderCount === menuRecord.orderItems){\n    msg.orderComplete = \"true\"\n    msg.user = msg.payload.user.id\n    msg.payload = selectedItems\n    msg.date = date;\n}\n\nreturn msg;",
         "outputs": 1,
@@ -396,18 +396,18 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 460,
+        "x": 420,
         "y": 1120,
         "wires": [
             [
-                "781794f556aa656b"
+                "99a74708d7e49872"
             ]
         ]
     },
     {
-        "id": "781794f556aa656b",
+        "id": "99a74708d7e49872",
         "type": "switch",
-        "z": "111ebab39c232114",
+        "z": "82ac7097160d24ce",
         "name": "Check if order is complete",
         "property": "orderComplete",
         "propertyType": "msg",
@@ -421,19 +421,19 @@
         "checkall": "true",
         "repair": false,
         "outputs": 1,
-        "x": 690,
+        "x": 650,
         "y": 1120,
         "wires": [
             [
-                "e82137306c131828",
-                "d2f9843df0c7301d"
+                "2b103a3e1f992d9a",
+                "6b593d3d28043391"
             ]
         ]
     },
     {
-        "id": "e82137306c131828",
+        "id": "2b103a3e1f992d9a",
         "type": "function",
-        "z": "111ebab39c232114",
+        "z": "82ac7097160d24ce",
         "name": "Insert order to database",
         "func": "\nmsg.topic = `INSERT INTO MENU_ORDER(date,user_id, order_status) VALUES \n            (${msg.date}, ${msg.user}, \"Order successful\");`\n            \nmsg.payload = \"Your order was successful!\"\nreturn msg;",
         "outputs": 1,
@@ -445,29 +445,29 @@
         "y": 1120,
         "wires": [
             [
-                "3e419f02fb129e2b",
-                "11e429152ac23298"
+                "15401a0adc5d2005",
+                "5bd6539b672daec5"
             ]
         ]
     },
     {
-        "id": "3e419f02fb129e2b",
+        "id": "15401a0adc5d2005",
         "type": "sqlite",
-        "z": "111ebab39c232114",
-        "mydb": "4cb129b3923edcd0",
+        "z": "82ac7097160d24ce",
+        "mydb": "963ab30464d0e7c2",
         "sqlquery": "msg.topic",
         "sql": "",
-        "name": "",
-        "x": 1600,
+        "name": "Mooncake Database",
+        "x": 1620,
         "y": 1120,
         "wires": [
             []
         ]
     },
     {
-        "id": "98b9fd7c8c52a78c",
+        "id": "257953536de6cfd7",
         "type": "function",
-        "z": "111ebab39c232114",
+        "z": "82ac7097160d24ce",
         "name": "Add each order item to the database",
         "func": "const item = Object.keys(msg.payload)[0]\n      quantity = msg.payload[item]\n      date = msg.date;\n            \nmsg.topic = `INSERT INTO ORDER_ITEM(order_id, item_name, quantity) VALUES(\n           (SELECT order_id FROM MENU_ORDER WHERE date='${date}' AND user_id='${msg.user}'),'${item}', '${quantity}');`\n\nreturn msg;",
         "outputs": 1,
@@ -479,14 +479,14 @@
         "y": 1260,
         "wires": [
             [
-                "3e419f02fb129e2b"
+                "15401a0adc5d2005"
             ]
         ]
     },
     {
-        "id": "d2f9843df0c7301d",
+        "id": "6b593d3d28043391",
         "type": "split",
-        "z": "111ebab39c232114",
+        "z": "82ac7097160d24ce",
         "name": "Split each order item",
         "splt": "\\n",
         "spltType": "str",
@@ -498,14 +498,14 @@
         "y": 1260,
         "wires": [
             [
-                "98b9fd7c8c52a78c"
+                "257953536de6cfd7"
             ]
         ]
     },
     {
-        "id": "da876eed5ed12aed",
+        "id": "76d1edcaad5ca8bd",
         "type": "switch",
-        "z": "111ebab39c232114",
+        "z": "82ac7097160d24ce",
         "name": "Check if message has a command",
         "property": "payload",
         "propertyType": "msg",
@@ -529,32 +529,40 @@
                 "t": "eq",
                 "v": "!order",
                 "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "!cancel",
+                "vt": "str"
             }
         ],
         "checkall": "true",
         "repair": false,
-        "outputs": 4,
+        "outputs": 5,
         "x": 460,
         "y": 500,
         "wires": [
             [
-                "99c1a02371060f03"
+                "704e1bbfe71e765c"
             ],
             [
-                "eb6e4c97d19be345"
+                "39e43ad6c2114d12"
             ],
             [
-                "dc9302301b143b50"
+                "0f5612e47c98fc0e"
             ],
             [
-                "4f6924885c7351dd"
+                "e21d3811c38d1777"
+            ],
+            [
+                "07ea8a8628c16282"
             ]
         ]
     },
     {
-        "id": "99c1a02371060f03",
+        "id": "704e1bbfe71e765c",
         "type": "function",
-        "z": "111ebab39c232114",
+        "z": "82ac7097160d24ce",
         "name": "Respond to !summary",
         "func": "const userId = msg.author.id\n\nmsg.topic=`SELECT m.order_id, date, order_status, item_name, quantity FROM \n            MENU_ORDER m INNER JOIN ORDER_ITEM i ON m.order_id = i.order_id\n            WHERE user_id='${userId}'`\nreturn msg;",
         "outputs": 1,
@@ -566,62 +574,62 @@
         "y": 360,
         "wires": [
             [
-                "402f4ae03eb3b552"
+                "17c5cbd7222c1f43"
             ]
         ]
     },
     {
-        "id": "402f4ae03eb3b552",
+        "id": "17c5cbd7222c1f43",
         "type": "sqlite",
-        "z": "111ebab39c232114",
-        "mydb": "4cb129b3923edcd0",
+        "z": "82ac7097160d24ce",
+        "mydb": "963ab30464d0e7c2",
         "sqlquery": "msg.topic",
         "sql": "",
-        "name": "",
-        "x": 1060,
+        "name": "Mooncake Database",
+        "x": 1020,
         "y": 360,
         "wires": [
             [
-                "89d2c2ea50705681"
+                "72270ec24fc62f2b"
             ]
         ]
     },
     {
-        "id": "89d2c2ea50705681",
+        "id": "72270ec24fc62f2b",
         "type": "function",
-        "z": "111ebab39c232114",
+        "z": "82ac7097160d24ce",
         "name": "Extract and format summary output",
-        "func": "if (msg.payload.length === 0){\n    msg.payload = \"You haven't made any orders previously. Hurry up and make an order!\"\n    return msg;\n} \n\n\nlet resStr = `Index     Date Ordered        Order status        Items\\n`\n\n//https://stackoverflow.com/questions/40774697/how-can-i-group-an-array-of-objects-by-key\nconst groupByKey = (list, key) => list.reduce((hash, obj) => ({...hash, [obj[key]]:( hash[obj[key]] || [] ).concat(obj)}), {})\n\nconst results = groupByKey(msg.payload, 'order_id'),\n      keys = Object.keys(results)\n\nfor (let i =0; i< keys.length; i++){\n    let order = results[keys[i]]\n    let itemObj = {}\n    for (let i=0; i<order.length; i++){\n        let item = order[i].item_name,\n            quantity = order[i].quantity\n        itemObj[item] = quantity\n    }\n    let orderItem = order[0],\n        order_id = orderItem.order_id,\n        date = new Date(orderItem.date).toLocaleString(),\n        order_status = orderItem.order_status,\n        itemStr = JSON.stringify(itemObj)\n        \n    resStr += `${order_id}      ${date}     ${order_status}     ${itemStr}\\n`\n}\n\nmsg.payload = resStr\n\nreturn msg;",
+        "func": "if (msg.payload.length === 0){\n    msg.payload = \"You haven't made any orders previously. Hurry up and make an order!\"\n    return msg;\n} \n\n\nlet resStr = `Index\\t     Date Ordered\\t\\t\\t            Order status\\t\\t        Items\\n`\n\n//https://stackoverflow.com/questions/40774697/how-can-i-group-an-array-of-objects-by-key\nconst groupByKey = (list, key) => list.reduce((hash, obj) => ({...hash, [obj[key]]:( hash[obj[key]] || [] ).concat(obj)}), {})\n\nconst results = groupByKey(msg.payload, 'order_id'),\n      keys = Object.keys(results)\n\nfor (let i =0; i< keys.length; i++){\n    let order = results[keys[i]]\n    let itemObj = {}\n    for (let i=0; i<order.length; i++){\n        let item = order[i].item_name,\n            quantity = order[i].quantity\n        itemObj[item] = quantity\n    }\n    let orderItem = order[0],\n        order_id = orderItem.order_id,\n        date = new Date(orderItem.date).toLocaleString(),\n        order_status = orderItem.order_status,\n        itemStr = JSON.stringify(itemObj)\n        \n    resStr += `#${order_id}\\t\\t      ${date}     ${order_status}\\t     ${itemStr}\\n`\n}\n\nmsg.payload = resStr\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 1380,
+        "x": 1300,
         "y": 360,
         "wires": [
             [
-                "4e5b0f6ce0f228d0"
+                "dc8864ed85892f96"
             ]
         ]
     },
     {
-        "id": "28f9cd41aa195b3a",
+        "id": "e5898b8ad784b1f9",
         "type": "discordMessageManager",
-        "z": "111ebab39c232114",
+        "z": "82ac7097160d24ce",
         "name": "",
         "channel": "",
         "token": "",
-        "x": 1830,
-        "y": 700,
+        "x": 1670,
+        "y": 760,
         "wires": [
             []
         ]
     },
     {
-        "id": "11e429152ac23298",
+        "id": "5bd6539b672daec5",
         "type": "change",
-        "z": "111ebab39c232114",
+        "z": "82ac7097160d24ce",
         "name": "Display success message",
         "rules": [
             {
@@ -648,16 +656,16 @@
         "y": 980,
         "wires": [
             [
-                "28f9cd41aa195b3a"
+                "e5898b8ad784b1f9"
             ]
         ]
     },
     {
-        "id": "57b8073b5474fac3",
+        "id": "68c36c95fc94ba1a",
         "type": "sqlite",
-        "z": "111ebab39c232114",
-        "g": "44f8998afc029d1b",
-        "mydb": "4cb129b3923edcd0",
+        "z": "82ac7097160d24ce",
+        "g": "df56f7f0efc8f769",
+        "mydb": "963ab30464d0e7c2",
         "sqlquery": "msg.topic",
         "sql": "",
         "name": "Create Mooncakes.db if not present",
@@ -668,10 +676,10 @@
         ]
     },
     {
-        "id": "592a2efc1cfa686e",
+        "id": "0dcc0cd911d8233d",
         "type": "inject",
-        "z": "111ebab39c232114",
-        "g": "44f8998afc029d1b",
+        "z": "82ac7097160d24ce",
+        "g": "df56f7f0efc8f769",
         "name": "Initialize on start",
         "props": [
             {
@@ -693,16 +701,16 @@
         "y": 1520,
         "wires": [
             [
-                "e38dea317a97b54d",
-                "4d03302012aac62c"
+                "50f6244f85fa3c8b",
+                "9b36f14287da3363"
             ]
         ]
     },
     {
-        "id": "e38dea317a97b54d",
+        "id": "50f6244f85fa3c8b",
         "type": "change",
-        "z": "111ebab39c232114",
-        "g": "44f8998afc029d1b",
+        "z": "82ac7097160d24ce",
+        "g": "df56f7f0efc8f769",
         "name": "Create MENU_ORDER Table",
         "rules": [
             {
@@ -722,15 +730,15 @@
         "y": 1480,
         "wires": [
             [
-                "57b8073b5474fac3"
+                "68c36c95fc94ba1a"
             ]
         ]
     },
     {
-        "id": "4d03302012aac62c",
+        "id": "9b36f14287da3363",
         "type": "change",
-        "z": "111ebab39c232114",
-        "g": "44f8998afc029d1b",
+        "z": "82ac7097160d24ce",
+        "g": "df56f7f0efc8f769",
         "name": "Create ORDER_ITEM table",
         "rules": [
             {
@@ -750,12 +758,195 @@
         "y": 1580,
         "wires": [
             [
-                "57b8073b5474fac3"
+                "68c36c95fc94ba1a"
             ]
         ]
     },
     {
-        "id": "4cb129b3923edcd0",
+        "id": "07ea8a8628c16282",
+        "type": "function",
+        "z": "82ac7097160d24ce",
+        "name": "Respond to !cancel",
+        "func": "const userId = msg.author.id\n\nmsg.topic=`SELECT m.order_id, date, order_status, item_name, quantity FROM \n            MENU_ORDER m INNER JOIN ORDER_ITEM i ON m.order_id = i.order_id\n            WHERE user_id='${userId}' AND order_status='Order successful'`\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 770,
+        "y": 600,
+        "wires": [
+            [
+                "26c35a639c957142"
+            ]
+        ]
+    },
+    {
+        "id": "26c35a639c957142",
+        "type": "sqlite",
+        "z": "82ac7097160d24ce",
+        "mydb": "963ab30464d0e7c2",
+        "sqlquery": "msg.topic",
+        "sql": "",
+        "name": "Mooncake Database",
+        "x": 1000,
+        "y": 600,
+        "wires": [
+            [
+                "03f91f26b0d8b0bc"
+            ]
+        ]
+    },
+    {
+        "id": "03f91f26b0d8b0bc",
+        "type": "function",
+        "z": "82ac7097160d24ce",
+        "name": "Format cancel output",
+        "func": "if (msg.payload.length === 0){\n    msg.payload = \"You don't have any orders that can be cancelled.\"\n    return msg;\n} \n\nlet orderIds = []\nlet resStr = `Index     Date Ordered        Order status        Items\\n`\n\n//https://stackoverflow.com/questions/40774697/how-can-i-group-an-array-of-objects-by-key\nconst groupByKey = (list, key) => list.reduce((hash, obj) => ({...hash, [obj[key]]:( hash[obj[key]] || [] ).concat(obj)}), {})\n\nconst results = groupByKey(msg.payload, 'order_id'),\n      keys = Object.keys(results)\n\nfor (let i =0; i< keys.length; i++){\n    let order = results[keys[i]]\n    let itemObj = {}\n    for (let i=0; i<order.length; i++){\n        let item = order[i].item_name,\n            quantity = order[i].quantity\n        itemObj[item] = quantity\n    }\n    let orderItem = order[0],\n        order_id = orderItem.order_id,\n        date = new Date(orderItem.date).toLocaleString(),\n        order_status = orderItem.order_status,\n        itemStr = JSON.stringify(itemObj)\n    orderIds.push(order_id)    \n    resStr += `${order_id}      ${date}     ${order_status}     ${itemStr}\\n`\n}\nresStr += \"Select the Order ID to cancel your order\"\nmsg.payload = resStr\nmsg.orderIds = orderIds\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1240,
+        "y": 600,
+        "wires": [
+            [
+                "dc8864ed85892f96",
+                "a42139c7269fa4c8"
+            ]
+        ]
+    },
+    {
+        "id": "a42139c7269fa4c8",
+        "type": "function",
+        "z": "82ac7097160d24ce",
+        "name": "Setup Options for Orders",
+        "func": "options = msg.orderIds\noptions = options.map(i => ({\"value\": `${i}`, \"label\": `${i}`}))\nmsg.payload = \"\"\nif (options.length != 0){\n    msg.components = [\n        {\n            \"type\": 1,\n            \"components\": [\n                {\n                    \"type\": 3,\n                    \"custom_id\": \"OrderCancel\",\n                    \"options\": options,\n                    \"placeholder\": \"Choose ID number\",\n                }\n            ]\n        }\n    ]\n}\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1490,
+        "y": 600,
+        "wires": [
+            [
+                "b5393af0df6121df"
+            ]
+        ]
+    },
+    {
+        "id": "b5393af0df6121df",
+        "type": "json",
+        "z": "82ac7097160d24ce",
+        "name": "Convert to JSON to JS obj",
+        "property": "components",
+        "action": "obj",
+        "pretty": false,
+        "x": 1740,
+        "y": 600,
+        "wires": [
+            [
+                "dc8864ed85892f96"
+            ]
+        ]
+    },
+    {
+        "id": "bc96e213b41aaa25",
+        "type": "function",
+        "z": "82ac7097160d24ce",
+        "name": "Delete order statement",
+        "func": "const userId = msg.payload.user.id\nconst order_id = parseInt(msg.payload.values[0])\nmsg.user = userId\nmsg.topic=`DELETE FROM MENU_ORDER WHERE user_id='${userId}' AND order_id='${order_id}'`\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 380,
+        "y": 1340,
+        "wires": [
+            [
+                "9b2f2472dd26f331"
+            ]
+        ]
+    },
+    {
+        "id": "73d0deb8b308c08f",
+        "type": "discordInteraction",
+        "z": "82ac7097160d24ce",
+        "name": "CancelSelection",
+        "token": "",
+        "interactionType": "selectMenu",
+        "custom_id": "OrderCancel",
+        "commandResponse": "",
+        "interactionObject": false,
+        "x": 160,
+        "y": 1340,
+        "wires": [
+            [
+                "bc96e213b41aaa25"
+            ]
+        ]
+    },
+    {
+        "id": "9b2f2472dd26f331",
+        "type": "sqlite",
+        "z": "82ac7097160d24ce",
+        "mydb": "963ab30464d0e7c2",
+        "sqlquery": "msg.topic",
+        "sql": "",
+        "name": "Moncake Database",
+        "x": 610,
+        "y": 1340,
+        "wires": [
+            [
+                "245e5cb65ef34b99"
+            ]
+        ]
+    },
+    {
+        "id": "d15f113de5e4b8e3",
+        "type": "discordMessageManager",
+        "z": "82ac7097160d24ce",
+        "name": "",
+        "channel": "",
+        "token": "",
+        "x": 1130,
+        "y": 1340,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "245e5cb65ef34b99",
+        "type": "change",
+        "z": "82ac7097160d24ce",
+        "name": "Set user message",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "Your Order has been cancelled",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 830,
+        "y": 1340,
+        "wires": [
+            [
+                "d15f113de5e4b8e3"
+            ]
+        ]
+    },
+    {
+        "id": "963ab30464d0e7c2",
         "type": "sqlitedb",
         "db": "Mooncakes.db",
         "mode": "RWC"
