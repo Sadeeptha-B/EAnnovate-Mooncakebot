@@ -22,7 +22,7 @@
             "9b36f14287da3363"
         ],
         "x": 94,
-        "y": 1439,
+        "y": 1719,
         "w": 852,
         "h": 182
     },
@@ -47,7 +47,7 @@
         "name": "",
         "channel": "",
         "token": "",
-        "x": 1990,
+        "x": 2070,
         "y": 440,
         "wires": [
             []
@@ -114,7 +114,7 @@
         "commandResponse": "",
         "interactionObject": true,
         "x": 190,
-        "y": 760,
+        "y": 860,
         "wires": [
             [
                 "7649fe7726ee9ef6"
@@ -138,7 +138,7 @@
                 "t": "set",
                 "p": "embeds",
                 "pt": "msg",
-                "to": "{\"title\":\"help\",\"description\":\"Commands you can use with Mooncakes bot!\",\"color\":\"#DE5E1F\",\"fields\":[{\"name\":\"!help\",\"value\":\"Provides users with a list of valid commands.\"},{\"name\":\"!menu\",\"value\":\"Displays a menu for users to view the available mooncakes.\"},{\"name\":\"!order\",\"value\":\"This command allows users to place their orders.\"},{\"name\":\"!summary\",\"value\":\"Provides a list of all previous orders a user has made.\"}]}",
+                "to": "{\"title\":\"help\",\"description\":\"Commands you can use with Mooncakes bot!\",\"color\":\"#DE5E1F\",\"fields\":[{\"name\":\"!help\",\"value\":\"Provides users with a list of valid commands.\"},{\"name\":\"!menu\",\"value\":\"Displays a menu for users to view the available mooncakes.\"},{\"name\":\"!order\",\"value\":\"This command allows users to place their orders.\"},{\"name\":\"!summary\",\"value\":\"Provides a list of all previous orders a user has made.\"},{\"name\":\"!cancel\",\"value\":\"Allows to cancel pending orders.\"}]}",
                 "tot": "json"
             }
         ],
@@ -201,7 +201,7 @@
         "finalize": "",
         "libs": [],
         "x": 1010,
-        "y": 760,
+        "y": 860,
         "wires": [
             [
                 "e5898b8ad784b1f9"
@@ -235,7 +235,7 @@
         "to": "",
         "reg": false,
         "x": 490,
-        "y": 760,
+        "y": 860,
         "wires": [
             [
                 "be0816b98b1a75c5",
@@ -256,7 +256,7 @@
         "stream": false,
         "addname": "",
         "x": 760,
-        "y": 760,
+        "y": 860,
         "wires": [
             [
                 "beb4146cd3122ecf"
@@ -275,7 +275,7 @@
         "finalize": "",
         "libs": [],
         "x": 760,
-        "y": 700,
+        "y": 800,
         "wires": [
             [
                 "e5898b8ad784b1f9"
@@ -293,7 +293,7 @@
         "commandResponse": "",
         "interactionObject": false,
         "x": 160,
-        "y": 980,
+        "y": 1040,
         "wires": [
             [
                 "45fd4461a2b5ddce"
@@ -312,7 +312,7 @@
         "finalize": "",
         "libs": [],
         "x": 510,
-        "y": 980,
+        "y": 1040,
         "wires": [
             []
         ]
@@ -344,7 +344,7 @@
         "to": "",
         "reg": false,
         "x": 770,
-        "y": 820,
+        "y": 920,
         "wires": [
             [
                 "73d9740b596c895b"
@@ -360,7 +360,7 @@
         "action": "obj",
         "pretty": false,
         "x": 990,
-        "y": 820,
+        "y": 920,
         "wires": [
             [
                 "e5898b8ad784b1f9"
@@ -378,7 +378,7 @@
         "commandResponse": "",
         "interactionObject": false,
         "x": 190,
-        "y": 1120,
+        "y": 1180,
         "wires": [
             [
                 "8c70449a670039c7"
@@ -397,7 +397,7 @@
         "finalize": "",
         "libs": [],
         "x": 420,
-        "y": 1120,
+        "y": 1180,
         "wires": [
             [
                 "99a74708d7e49872"
@@ -422,7 +422,7 @@
         "repair": false,
         "outputs": 1,
         "x": 650,
-        "y": 1120,
+        "y": 1180,
         "wires": [
             [
                 "2b103a3e1f992d9a",
@@ -442,7 +442,7 @@
         "finalize": "",
         "libs": [],
         "x": 950,
-        "y": 1120,
+        "y": 1180,
         "wires": [
             [
                 "15401a0adc5d2005",
@@ -459,7 +459,7 @@
         "sql": "",
         "name": "Mooncake Database",
         "x": 1620,
-        "y": 1120,
+        "y": 1180,
         "wires": [
             []
         ]
@@ -476,7 +476,7 @@
         "finalize": "",
         "libs": [],
         "x": 1250,
-        "y": 1260,
+        "y": 1320,
         "wires": [
             [
                 "15401a0adc5d2005"
@@ -495,7 +495,7 @@
         "stream": false,
         "addname": "",
         "x": 940,
-        "y": 1260,
+        "y": 1320,
         "wires": [
             [
                 "257953536de6cfd7"
@@ -621,7 +621,7 @@
         "channel": "",
         "token": "",
         "x": 1670,
-        "y": 760,
+        "y": 860,
         "wires": [
             []
         ]
@@ -653,7 +653,7 @@
         "to": "",
         "reg": false,
         "x": 1250,
-        "y": 980,
+        "y": 1040,
         "wires": [
             [
                 "e5898b8ad784b1f9"
@@ -670,7 +670,7 @@
         "sql": "",
         "name": "Create Mooncakes.db if not present",
         "x": 780,
-        "y": 1520,
+        "y": 1800,
         "wires": [
             []
         ]
@@ -698,7 +698,7 @@
         "payload": "",
         "payloadType": "date",
         "x": 220,
-        "y": 1520,
+        "y": 1800,
         "wires": [
             [
                 "50f6244f85fa3c8b",
@@ -727,7 +727,7 @@
         "to": "",
         "reg": false,
         "x": 480,
-        "y": 1480,
+        "y": 1760,
         "wires": [
             [
                 "68c36c95fc94ba1a"
@@ -755,7 +755,7 @@
         "to": "",
         "reg": false,
         "x": 480,
-        "y": 1580,
+        "y": 1860,
         "wires": [
             [
                 "68c36c95fc94ba1a"
@@ -801,19 +801,19 @@
         "id": "03f91f26b0d8b0bc",
         "type": "function",
         "z": "82ac7097160d24ce",
-        "name": "Format cancel output",
-        "func": "if (msg.payload.length === 0){\n    msg.payload = \"You don't have any orders that can be cancelled.\"\n    return msg;\n} \n\nlet orderIds = []\nlet resStr = `Index\\t     Date Ordered\\t\\t\\t            Order status\\t\\t        Items\\n`\n\n//https://stackoverflow.com/questions/40774697/how-can-i-group-an-array-of-objects-by-key\nconst groupByKey = (list, key) => list.reduce((hash, obj) => ({...hash, [obj[key]]:( hash[obj[key]] || [] ).concat(obj)}), {})\n\nconst results = groupByKey(msg.payload, 'order_id'),\n      keys = Object.keys(results)\n\nfor (let i =0; i< keys.length; i++){\n    let order = results[keys[i]]\n    let itemObj = {}\n    for (let i=0; i<order.length; i++){\n        let item = order[i].item_name,\n            quantity = order[i].quantity\n        itemObj[item] = quantity\n    }\n    let orderItem = order[0],\n        order_id = orderItem.order_id,\n        date = new Date(orderItem.date).toLocaleString(),\n        order_status = orderItem.order_status,\n        itemStr = JSON.stringify(itemObj)\n    orderIds.push(order_id)    \n    resStr += `#${order_id}\\t\\t      ${date}     ${order_status}\\t     ${itemStr}\\n`\n}\nresStr += \"Select the Order ID to cancel your order\"\nmsg.payload = resStr\nmsg.orderIds = orderIds\n\nreturn msg;",
+        "name": "Display cancellable orders",
+        "func": "if (msg.payload.length === 0){\n    msg.payload = \"You don't have any orders that can be cancelled.\"\n    msg.orderIds = []\n    return msg;\n} \n\nlet orderIds = []\nlet resStr = `Index\\t     Date Ordered\\t\\t\\t            Order status\\t\\t        Items\\n`\n\n//https://stackoverflow.com/questions/40774697/how-can-i-group-an-array-of-objects-by-key\nconst groupByKey = (list, key) => list.reduce((hash, obj) => ({...hash, [obj[key]]:( hash[obj[key]] || [] ).concat(obj)}), {})\n\nconst results = groupByKey(msg.payload, 'order_id'),\n      keys = Object.keys(results)\n\nfor (let i =0; i< keys.length; i++){\n    let order = results[keys[i]]\n    let itemObj = {}\n    for (let i=0; i<order.length; i++){\n        let item = order[i].item_name,\n            quantity = order[i].quantity\n        itemObj[item] = quantity\n    }\n    let orderItem = order[0],\n        order_id = orderItem.order_id,\n        date = new Date(orderItem.date).toLocaleString(),\n        order_status = orderItem.order_status,\n        itemStr = JSON.stringify(itemObj)\n    orderIds.push(order_id)    \n    resStr += `#${order_id}\\t\\t      ${date}     ${order_status}\\t     ${itemStr}\\n`\n}\nresStr += \"\\nSelect the Order ID to cancel your order\"\nmsg.payload = resStr\nmsg.orderIds = orderIds\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 1240,
+        "x": 1250,
         "y": 600,
         "wires": [
             [
                 "dc8864ed85892f96",
-                "a42139c7269fa4c8"
+                "ca6965cf1cb38f1f"
             ]
         ]
     },
@@ -821,15 +821,15 @@
         "id": "a42139c7269fa4c8",
         "type": "function",
         "z": "82ac7097160d24ce",
-        "name": "Setup Options for Orders",
-        "func": "options = msg.orderIds\noptions = options.map(i => ({\"value\": `${i}`, \"label\": `${i}`}))\nmsg.payload = \"\"\nif (options.length != 0){\n    msg.components = [\n        {\n            \"type\": 1,\n            \"components\": [\n                {\n                    \"type\": 3,\n                    \"custom_id\": \"OrderCancel\",\n                    \"options\": options,\n                    \"placeholder\": \"Choose ID number\",\n                }\n            ]\n        }\n    ]\n}\nreturn msg;",
+        "name": "Display order ID selection",
+        "func": "let options = msg.orderIds\noptions = options.map(i => ({\"value\": `${i}`, \"label\": `${i}`}))\nmsg.payload = \"\"\n\nmsg.components = [\n    {\n        \"type\": 1,\n        \"components\": [\n            {\n                \"type\": 3,\n                \"custom_id\": \"OrderCancel\",\n                \"options\": options,\n                \"placeholder\": \"Choose ID number\",\n                \"min_values\": 1,\n                \"max_values\": options.length\n            }\n        ]\n    }\n]\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 1490,
-        "y": 600,
+        "x": 1510,
+        "y": 680,
         "wires": [
             [
                 "b5393af0df6121df"
@@ -844,8 +844,8 @@
         "property": "components",
         "action": "obj",
         "pretty": false,
-        "x": 1740,
-        "y": 600,
+        "x": 1780,
+        "y": 680,
         "wires": [
             [
                 "dc8864ed85892f96"
@@ -856,15 +856,15 @@
         "id": "bc96e213b41aaa25",
         "type": "function",
         "z": "82ac7097160d24ce",
-        "name": "Delete order statement",
-        "func": "const userId = msg.payload.user.id\nconst order_id = parseInt(msg.payload.values[0])\nmsg.user = userId\nmsg.topic=`DELETE FROM MENU_ORDER WHERE user_id='${userId}' AND order_id='${order_id}'`\nreturn msg;",
+        "name": "Delete from MENU_ORDER",
+        "func": "const userId = msg.payload.user.id\nconst order_ids = msg.payload.values\n\nmsg.user = userId\n\nmsg.topic=`DELETE FROM MENU_ORDER WHERE user_id='${userId}' AND order_id IN (${order_ids.toString()})`\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 380,
-        "y": 1340,
+        "x": 400,
+        "y": 1400,
         "wires": [
             [
                 "9b2f2472dd26f331"
@@ -882,10 +882,12 @@
         "commandResponse": "",
         "interactionObject": false,
         "x": 160,
-        "y": 1340,
+        "y": 1400,
         "wires": [
             [
-                "bc96e213b41aaa25"
+                "bc96e213b41aaa25",
+                "566e9049e92ffdc0",
+                "8c566fe44bc35a58"
             ]
         ]
     },
@@ -896,12 +898,48 @@
         "mydb": "963ab30464d0e7c2",
         "sqlquery": "msg.topic",
         "sql": "",
-        "name": "Moncake Database",
-        "x": 610,
-        "y": 1340,
+        "name": "Mooncake Database",
+        "x": 700,
+        "y": 1400,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "8c566fe44bc35a58",
+        "type": "function",
+        "z": "82ac7097160d24ce",
+        "name": "Send cancellation message",
+        "func": "let order_ids = msg.payload.values;\nmsg.channel = msg.payload.channelId\n\nif (order_ids.length === 1){\n    msg.payload =  `Order: ${order_ids[0]} has been cancelled`\n} else{\n    msg.payload = `Orders: ${order_ids.toString()} have been cancelled`\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 400,
+        "y": 1600,
         "wires": [
             [
-                "245e5cb65ef34b99"
+                "d15f113de5e4b8e3"
+            ]
+        ]
+    },
+    {
+        "id": "566e9049e92ffdc0",
+        "type": "function",
+        "z": "82ac7097160d24ce",
+        "name": "Delete from ITEM_ORDER",
+        "func": "msg.topic = `DELETE FROM ORDER_ITEM WHERE order_id\n            IN (${msg.payload.values.toString()})`\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 420,
+        "y": 1500,
+        "wires": [
+            [
+                "9b2f2472dd26f331"
             ]
         ]
     },
@@ -912,36 +950,32 @@
         "name": "",
         "channel": "",
         "token": "",
-        "x": 1130,
-        "y": 1340,
+        "x": 790,
+        "y": 1600,
         "wires": [
             []
         ]
     },
     {
-        "id": "245e5cb65ef34b99",
-        "type": "change",
+        "id": "ca6965cf1cb38f1f",
+        "type": "switch",
         "z": "82ac7097160d24ce",
-        "name": "Set user message",
+        "name": "Proceed only if there are cancellable orders",
+        "property": "orderIds",
+        "propertyType": "msg",
         "rules": [
             {
-                "t": "set",
-                "p": "payload",
-                "pt": "msg",
-                "to": "Your Order has been cancelled",
-                "tot": "str"
+                "t": "nempty"
             }
         ],
-        "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 830,
-        "y": 1340,
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 1610,
+        "y": 600,
         "wires": [
             [
-                "d15f113de5e4b8e3"
+                "a42139c7269fa4c8"
             ]
         ]
     },
