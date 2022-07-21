@@ -1,0 +1,763 @@
+[
+    {
+        "id": "111ebab39c232114",
+        "type": "tab",
+        "label": "Discord-bot",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "44f8998afc029d1b",
+        "type": "group",
+        "z": "111ebab39c232114",
+        "name": "Initialize database",
+        "style": {
+            "label": true
+        },
+        "nodes": [
+            "57b8073b5474fac3",
+            "592a2efc1cfa686e",
+            "e38dea317a97b54d",
+            "4d03302012aac62c"
+        ],
+        "x": 94,
+        "y": 1439,
+        "w": 852,
+        "h": 182
+    },
+    {
+        "id": "9d6aebaf3b188385",
+        "type": "discordMessage",
+        "z": "111ebab39c232114",
+        "name": "",
+        "token": "",
+        "x": 160,
+        "y": 500,
+        "wires": [
+            [
+                "da876eed5ed12aed"
+            ]
+        ]
+    },
+    {
+        "id": "4e5b0f6ce0f228d0",
+        "type": "discordMessageManager",
+        "z": "111ebab39c232114",
+        "name": "",
+        "channel": "",
+        "token": "",
+        "x": 1830,
+        "y": 400,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "4f6924885c7351dd",
+        "type": "change",
+        "z": "111ebab39c232114",
+        "name": "Respond to !order",
+        "rules": [
+            {
+                "t": "set",
+                "p": "components",
+                "pt": "msg",
+                "to": "[{\"type\":1,\"components\":[{\"type\":3,\"custom_id\":\"Order\",\"options\":[{\"label\":\"White Lotus\",\"value\":\"White Lotus\",\"description\":\"Cantonese-style mooncake. White lotus paste filling with a natural fragrance\",\"emoji\":{\"name\":\"💮\",\"id\":null}},{\"label\":\"Red Bean\",\"value\":\"Red Bean\",\"description\":\"A classic. Sweet bean paste and the outer skin makes the mooncake smooth and have a richer flavor\",\"emoji\":{\"name\":\"🥮\",\"id\":null}},{\"label\":\"Green Tea\",\"value\":\"Green Tea\",\"description\":\"Fresh natural taste. Not overly sweet and has a certain health effect!\",\"emoji\":{\"name\":\"💚\",\"id\":null}}],\"placeholder\":\"Choose your order\",\"min_values\":1,\"max_values\":3}]}]",
+                "tot": "json"
+            },
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "Click the button below to order some mooncake!",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 770,
+        "y": 540,
+        "wires": [
+            [
+                "6ba1db2a820b1759"
+            ]
+        ]
+    },
+    {
+        "id": "6ba1db2a820b1759",
+        "type": "json",
+        "z": "111ebab39c232114",
+        "name": "Convert to JSON to JS obj",
+        "property": "components",
+        "action": "obj",
+        "pretty": false,
+        "x": 1000,
+        "y": 540,
+        "wires": [
+            [
+                "4e5b0f6ce0f228d0"
+            ]
+        ]
+    },
+    {
+        "id": "096153183f0fb378",
+        "type": "discordInteraction",
+        "z": "111ebab39c232114",
+        "name": "MoonCake Menu Selection ",
+        "token": "",
+        "interactionType": "selectMenu",
+        "custom_id": "Order",
+        "commandResponse": "",
+        "interactionObject": true,
+        "x": 190,
+        "y": 760,
+        "wires": [
+            [
+                "1d6867441084f44f"
+            ]
+        ]
+    },
+    {
+        "id": "eb6e4c97d19be345",
+        "type": "change",
+        "z": "111ebab39c232114",
+        "name": "Respond to !help",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "embeds",
+                "pt": "msg",
+                "to": "{\"title\":\"help\",\"description\":\"Commands you can use with Mooncakes bot!\",\"color\":\"#DE5E1F\",\"fields\":[{\"name\":\"!help\",\"value\":\"Provides users with a list of valid commands.\"},{\"name\":\"!menu\",\"value\":\"Displays a menu for users to view the available mooncakes.\"},{\"name\":\"!order\",\"value\":\"This command allows users to place their orders.\"},{\"name\":\"!summary\",\"value\":\"Provides a list of all previous orders a user has made.\"}]}",
+                "tot": "json"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 770,
+        "y": 420,
+        "wires": [
+            [
+                "4e5b0f6ce0f228d0"
+            ]
+        ]
+    },
+    {
+        "id": "dc9302301b143b50",
+        "type": "change",
+        "z": "111ebab39c232114",
+        "name": "Respond to !menu",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "embeds",
+                "pt": "msg",
+                "to": "{\"title\":\"Menu\",\"description\":\"Our Menu!\",\"color\":\"#DE5E1F\",\"fields\":[{\"name\":\"White Lotus Mooncake\",\"value\":\"Cantonese-style mooncake. White lotus paste filling with a natural fragrance\"},{\"name\":\"Red Bean Mooncake\",\"value\":\"A classic. Sweet bean paste and the outer skin makes the mooncake smooth and have a richer flavor\"},{\"name\":\"Green Tea Mooncake\",\"value\":\"Fresh natural taste. Not overly sweet and has a certain health effect!\"}]}",
+                "tot": "json"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 770,
+        "y": 480,
+        "wires": [
+            [
+                "4e5b0f6ce0f228d0"
+            ]
+        ]
+    },
+    {
+        "id": "e191276dbf480184",
+        "type": "function",
+        "z": "111ebab39c232114",
+        "name": "Display Quantity Selection",
+        "func": "const orderLimit = 10;\n\nconst createOptionRange = () => {\n    const options = []\n    for (i =0; i<orderLimit; i++){\n        options.push({\"value\": `${i+1}`, \"label\": `${i+1}`})\n    }\n    return options\n}\n\nmsg.components = [\n    {\n        \"type\": 1,\n        \"components\": [\n            {\n                \"type\": 3,\n                \"custom_id\": `quantity${msg.payload.replace(/\\s/g, \"\")}`,\n                \"options\": createOptionRange(),\n                \"placeholder\": \"Choose your order\",\n                \"min_values\": 1,\n                \"max_values\": 1\n            }\n        ]\n    }\n]\n\nconst orderItemAmount = flow.get(msg.user)\norderItemAmount.orderItems += 1\nflow.set(msg.user, orderItemAmount)\n\nmsg.payload = `How many ${msg.payload} Mooncakes do you need?`\n\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 970,
+        "y": 760,
+        "wires": [
+            [
+                "28f9cd41aa195b3a"
+            ]
+        ]
+    },
+    {
+        "id": "1d6867441084f44f",
+        "type": "change",
+        "z": "111ebab39c232114",
+        "name": "Extract ordered items and user",
+        "rules": [
+            {
+                "t": "set",
+                "p": "user",
+                "pt": "msg",
+                "to": "payload.user.id",
+                "tot": "msg"
+            },
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload.values",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 490,
+        "y": 760,
+        "wires": [
+            [
+                "47e14cd34de36e25",
+                "7e97ec37652641b7",
+                "3f46964241099949"
+            ]
+        ]
+    },
+    {
+        "id": "47e14cd34de36e25",
+        "type": "split",
+        "z": "111ebab39c232114",
+        "name": "Send each item",
+        "splt": "\\n",
+        "spltType": "str",
+        "arraySplt": 1,
+        "arraySpltType": "len",
+        "stream": false,
+        "addname": "",
+        "x": 760,
+        "y": 760,
+        "wires": [
+            [
+                "e191276dbf480184"
+            ]
+        ]
+    },
+    {
+        "id": "7e97ec37652641b7",
+        "type": "function",
+        "z": "111ebab39c232114",
+        "name": "Start new order",
+        "func": "const date = new Date()\n\nmsg.embeds ={\n    \"title\": \"New Order:\",\n    \"description\": `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`,\n    \"color\": \"#DE5E1F\"\n}\n\nflow.set(msg.user, {\"orderItems\":0})\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 780,
+        "y": 680,
+        "wires": [
+            [
+                "28f9cd41aa195b3a"
+            ]
+        ]
+    },
+    {
+        "id": "83079b48878a09f8",
+        "type": "discordInteraction",
+        "z": "111ebab39c232114",
+        "name": "QuantitySelection",
+        "token": "",
+        "interactionType": "selectMenu",
+        "custom_id": "quantityGreenTea,quantityWhiteLotus,quantityRedBean",
+        "commandResponse": "",
+        "interactionObject": false,
+        "x": 160,
+        "y": 980,
+        "wires": [
+            [
+                "db637fce733d6256"
+            ]
+        ]
+    },
+    {
+        "id": "db637fce733d6256",
+        "type": "function",
+        "z": "111ebab39c232114",
+        "name": "Save selections to context store",
+        "func": "const item = msg.payload.customId.replace('quantity', '')\nconst quantity = parseInt(msg.payload.values[0])\n\nconst userOrder = flow.get(msg.payload.user.id);\n\nif (userOrder[item] === undefined){\n    userOrder[item] = {\n        \"quantity\": quantity,\n        \"selection\": 1\n    }\n} else{\n    userOrder[item].quantity = quantity\n}\n\nflow.set(msg.payload.user.id, userOrder)\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 510,
+        "y": 980,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "3f46964241099949",
+        "type": "change",
+        "z": "111ebab39c232114",
+        "name": "Send submit button",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "components",
+                "pt": "msg",
+                "to": "[{\"type\":1,\"components\":[{\"type\":2,\"custom_id\":\"orderSubmit\",\"label\":\"Submit\",\"style\":\"SUCCESS\"}]}]",
+                "tot": "json"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 770,
+        "y": 840,
+        "wires": [
+            [
+                "932071036365f651"
+            ]
+        ]
+    },
+    {
+        "id": "932071036365f651",
+        "type": "json",
+        "z": "111ebab39c232114",
+        "name": "",
+        "property": "components",
+        "action": "obj",
+        "pretty": false,
+        "x": 990,
+        "y": 840,
+        "wires": [
+            [
+                "28f9cd41aa195b3a"
+            ]
+        ]
+    },
+    {
+        "id": "13e4b421a105a10d",
+        "type": "discordInteraction",
+        "z": "111ebab39c232114",
+        "name": "Submit Button Interaction",
+        "token": "",
+        "interactionType": "button",
+        "custom_id": "orderSubmit",
+        "commandResponse": "",
+        "interactionObject": false,
+        "x": 190,
+        "y": 1120,
+        "wires": [
+            [
+                "53f8e14d14ce3d66"
+            ]
+        ]
+    },
+    {
+        "id": "53f8e14d14ce3d66",
+        "type": "function",
+        "z": "111ebab39c232114",
+        "name": "Obtain the order",
+        "func": "const menu = [\"WhiteLotus\", \"RedBean\", \"GreenTea\"],\n      menuRecord = flow.get(msg.payload.user.id),\n      date = new Date().getTime()\n      \nmsg.orderComplete = \"false\"\n\nlet orderCount = 0\n    selectedItems = []\n\n\nfor (let i=0; i<menu.length; i++){\n    let item = menu[i]\n    if (menuRecord[item] !== undefined){\n        orderCount += menuRecord[item].selection\n        let itemObj = {}\n        itemObj[item]=menuRecord[item].quantity\n        selectedItems.push(itemObj)\n    }\n}\n\nif (orderCount === menuRecord.orderItems){\n    msg.orderComplete = \"true\"\n    msg.user = msg.payload.user.id\n    msg.payload = selectedItems\n    msg.date = date;\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 460,
+        "y": 1120,
+        "wires": [
+            [
+                "781794f556aa656b"
+            ]
+        ]
+    },
+    {
+        "id": "781794f556aa656b",
+        "type": "switch",
+        "z": "111ebab39c232114",
+        "name": "Check if order is complete",
+        "property": "orderComplete",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "true",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 690,
+        "y": 1120,
+        "wires": [
+            [
+                "e82137306c131828",
+                "d2f9843df0c7301d"
+            ]
+        ]
+    },
+    {
+        "id": "e82137306c131828",
+        "type": "function",
+        "z": "111ebab39c232114",
+        "name": "Insert order to database",
+        "func": "\nmsg.topic = `INSERT INTO MENU_ORDER(date,user_id, order_status) VALUES \n            (${msg.date}, ${msg.user}, \"Order successful\");`\n            \nmsg.payload = \"Your order was successful!\"\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 950,
+        "y": 1120,
+        "wires": [
+            [
+                "3e419f02fb129e2b",
+                "11e429152ac23298"
+            ]
+        ]
+    },
+    {
+        "id": "3e419f02fb129e2b",
+        "type": "sqlite",
+        "z": "111ebab39c232114",
+        "mydb": "4cb129b3923edcd0",
+        "sqlquery": "msg.topic",
+        "sql": "",
+        "name": "",
+        "x": 1600,
+        "y": 1120,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "98b9fd7c8c52a78c",
+        "type": "function",
+        "z": "111ebab39c232114",
+        "name": "Add each order item to the database",
+        "func": "const item = Object.keys(msg.payload)[0]\n      quantity = msg.payload[item]\n      date = msg.date;\n            \nmsg.topic = `INSERT INTO ORDER_ITEM(order_id, item_name, quantity) VALUES(\n           (SELECT order_id FROM MENU_ORDER WHERE date='${date}' AND user_id='${msg.user}'),'${item}', '${quantity}');`\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1250,
+        "y": 1260,
+        "wires": [
+            [
+                "3e419f02fb129e2b"
+            ]
+        ]
+    },
+    {
+        "id": "d2f9843df0c7301d",
+        "type": "split",
+        "z": "111ebab39c232114",
+        "name": "Split each order item",
+        "splt": "\\n",
+        "spltType": "str",
+        "arraySplt": 1,
+        "arraySpltType": "len",
+        "stream": false,
+        "addname": "",
+        "x": 940,
+        "y": 1260,
+        "wires": [
+            [
+                "98b9fd7c8c52a78c"
+            ]
+        ]
+    },
+    {
+        "id": "da876eed5ed12aed",
+        "type": "switch",
+        "z": "111ebab39c232114",
+        "name": "Check if message has a command",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "!summary",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "!help",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "!menu",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "!order",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 4,
+        "x": 460,
+        "y": 500,
+        "wires": [
+            [
+                "99c1a02371060f03"
+            ],
+            [
+                "eb6e4c97d19be345"
+            ],
+            [
+                "dc9302301b143b50"
+            ],
+            [
+                "4f6924885c7351dd"
+            ]
+        ]
+    },
+    {
+        "id": "99c1a02371060f03",
+        "type": "function",
+        "z": "111ebab39c232114",
+        "name": "Respond to !summary",
+        "func": "const userId = msg.author.id\n\nmsg.topic=`SELECT m.order_id, date, order_status, item_name, quantity FROM \n            MENU_ORDER m INNER JOIN ORDER_ITEM i ON m.order_id = i.order_id\n            WHERE user_id='${userId}'`\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 780,
+        "y": 360,
+        "wires": [
+            [
+                "402f4ae03eb3b552"
+            ]
+        ]
+    },
+    {
+        "id": "402f4ae03eb3b552",
+        "type": "sqlite",
+        "z": "111ebab39c232114",
+        "mydb": "4cb129b3923edcd0",
+        "sqlquery": "msg.topic",
+        "sql": "",
+        "name": "",
+        "x": 1060,
+        "y": 360,
+        "wires": [
+            [
+                "89d2c2ea50705681"
+            ]
+        ]
+    },
+    {
+        "id": "89d2c2ea50705681",
+        "type": "function",
+        "z": "111ebab39c232114",
+        "name": "Extract and format summary output",
+        "func": "if (msg.payload.length === 0){\n    msg.payload = \"You haven't made any orders previously. Hurry up and make an order!\"\n    return msg;\n} \n\n\nlet resStr = `Index     Date Ordered        Order status        Items\\n`\n\n//https://stackoverflow.com/questions/40774697/how-can-i-group-an-array-of-objects-by-key\nconst groupByKey = (list, key) => list.reduce((hash, obj) => ({...hash, [obj[key]]:( hash[obj[key]] || [] ).concat(obj)}), {})\n\nconst results = groupByKey(msg.payload, 'order_id'),\n      keys = Object.keys(results)\n\nfor (let i =0; i< keys.length; i++){\n    let order = results[keys[i]]\n    let itemObj = {}\n    for (let i=0; i<order.length; i++){\n        let item = order[i].item_name,\n            quantity = order[i].quantity\n        itemObj[item] = quantity\n    }\n    let orderItem = order[0],\n        order_id = orderItem.order_id,\n        date = new Date(orderItem.date).toLocaleString(),\n        order_status = orderItem.order_status,\n        itemStr = JSON.stringify(itemObj)\n        \n    resStr += `${order_id}      ${date}     ${order_status}     ${itemStr}\\n`\n}\n\nmsg.payload = resStr\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1380,
+        "y": 360,
+        "wires": [
+            [
+                "4e5b0f6ce0f228d0"
+            ]
+        ]
+    },
+    {
+        "id": "28f9cd41aa195b3a",
+        "type": "discordMessageManager",
+        "z": "111ebab39c232114",
+        "name": "",
+        "channel": "",
+        "token": "",
+        "x": 1830,
+        "y": 700,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "11e429152ac23298",
+        "type": "change",
+        "z": "111ebab39c232114",
+        "name": "Display success message",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "embeds",
+                "pt": "msg",
+                "to": "{\"title\":\"Success\",\"description\":\"Your order was successful!\",\"color\":\"#DE5E1F\"}",
+                "tot": "json"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1250,
+        "y": 980,
+        "wires": [
+            [
+                "28f9cd41aa195b3a"
+            ]
+        ]
+    },
+    {
+        "id": "57b8073b5474fac3",
+        "type": "sqlite",
+        "z": "111ebab39c232114",
+        "g": "44f8998afc029d1b",
+        "mydb": "4cb129b3923edcd0",
+        "sqlquery": "msg.topic",
+        "sql": "",
+        "name": "Create Mooncakes.db if not present",
+        "x": 780,
+        "y": 1520,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "592a2efc1cfa686e",
+        "type": "inject",
+        "z": "111ebab39c232114",
+        "g": "44f8998afc029d1b",
+        "name": "Initialize on start",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 220,
+        "y": 1520,
+        "wires": [
+            [
+                "e38dea317a97b54d",
+                "4d03302012aac62c"
+            ]
+        ]
+    },
+    {
+        "id": "e38dea317a97b54d",
+        "type": "change",
+        "z": "111ebab39c232114",
+        "g": "44f8998afc029d1b",
+        "name": "Create MENU_ORDER Table",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "CREATE TABLE IF NOT EXISTS MENU_ORDER          (order_id INTEGER PRIMARY KEY, date INT, user_id TEXT, order_status TEXT);",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 480,
+        "y": 1480,
+        "wires": [
+            [
+                "57b8073b5474fac3"
+            ]
+        ]
+    },
+    {
+        "id": "4d03302012aac62c",
+        "type": "change",
+        "z": "111ebab39c232114",
+        "g": "44f8998afc029d1b",
+        "name": "Create ORDER_ITEM table",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "CREATE TABLE IF NOT EXISTS ORDER_ITEM(order_id INTEGER, item_name TEXT, quantity INT, PRIMARY KEY(order_id, item_name));",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 480,
+        "y": 1580,
+        "wires": [
+            [
+                "57b8073b5474fac3"
+            ]
+        ]
+    },
+    {
+        "id": "4cb129b3923edcd0",
+        "type": "sqlitedb",
+        "db": "Mooncakes.db",
+        "mode": "RWC"
+    }
+]
