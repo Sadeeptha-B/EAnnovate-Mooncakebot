@@ -124,7 +124,7 @@
             "482dac863765cfcc"
         ],
         "x": 194,
-        "y": 779,
+        "y": 799,
         "w": 852,
         "h": 922
     },
@@ -225,7 +225,7 @@
         "maxMessageSize": 4096,
         "maxBufferSize": 4096,
         "x": 940,
-        "y": 1240,
+        "y": 1260,
         "wires": [
             []
         ]
@@ -240,7 +240,7 @@
         "value": "0",
         "name": "_sensor0",
         "x": 580,
-        "y": 820,
+        "y": 840,
         "wires": [
             [
                 "682355ac9bc88396"
@@ -257,7 +257,7 @@
         "value": "0",
         "name": "_sensor1",
         "x": 580,
-        "y": 900,
+        "y": 920,
         "wires": [
             [
                 "682355ac9bc88396"
@@ -274,7 +274,7 @@
         "value": "0",
         "name": "_sensor2",
         "x": 580,
-        "y": 1000,
+        "y": 1020,
         "wires": [
             [
                 "682355ac9bc88396"
@@ -291,7 +291,7 @@
         "value": "",
         "name": "_conveyor0",
         "x": 590,
-        "y": 1080,
+        "y": 1100,
         "wires": [
             [
                 "682355ac9bc88396"
@@ -308,7 +308,7 @@
         "value": "",
         "name": "_conveyor1",
         "x": 590,
-        "y": 1140,
+        "y": 1160,
         "wires": [
             [
                 "682355ac9bc88396"
@@ -325,7 +325,7 @@
         "value": "",
         "name": "_conveyor2",
         "x": 590,
-        "y": 1200,
+        "y": 1220,
         "wires": [
             [
                 "682355ac9bc88396"
@@ -342,7 +342,7 @@
         "value": "",
         "name": "_conveyor3a",
         "x": 590,
-        "y": 1260,
+        "y": 1280,
         "wires": [
             [
                 "682355ac9bc88396"
@@ -359,7 +359,7 @@
         "value": "",
         "name": "_conveyor3b",
         "x": 590,
-        "y": 1320,
+        "y": 1340,
         "wires": [
             [
                 "682355ac9bc88396"
@@ -389,7 +389,7 @@
         "payload": "{\"opcuaCommand\":\"addVariable\"}",
         "payloadType": "json",
         "x": 290,
-        "y": 1240,
+        "y": 1260,
         "wires": [
             [
                 "8c4910aea04fecc8",
@@ -510,7 +510,7 @@
         "value": "0",
         "name": "_Emitter0",
         "x": 580,
-        "y": 1420,
+        "y": 1440,
         "wires": [
             [
                 "682355ac9bc88396"
@@ -527,7 +527,7 @@
         "value": "0",
         "name": "_Emitter1",
         "x": 580,
-        "y": 1480,
+        "y": 1500,
         "wires": [
             [
                 "682355ac9bc88396"
@@ -544,7 +544,7 @@
         "value": "0",
         "name": "_Emitter2",
         "x": 580,
-        "y": 1540,
+        "y": 1560,
         "wires": [
             [
                 "682355ac9bc88396"
@@ -930,7 +930,7 @@
         "value": "0",
         "name": "_Emitter3",
         "x": 580,
-        "y": 1600,
+        "y": 1620,
         "wires": [
             [
                 "682355ac9bc88396"
@@ -1707,9 +1707,7 @@
             [
                 "5ce6df22c9910926",
                 "c3906bba9a8796fa",
-                "efb2902c684044fb",
-                "1902d4ddd419bcc6",
-                "0dc1dac0a4e819a5"
+                "a2176edb186d813d"
             ]
         ]
     },
@@ -1919,7 +1917,7 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 830,
+        "x": 970,
         "y": 360,
         "wires": [
             [
@@ -1983,7 +1981,8 @@
         "y": 480,
         "wires": [
             [
-                "fa2abe40a593d651"
+                "fa2abe40a593d651",
+                "0da4ef649a023847"
             ]
         ]
     },
@@ -1992,14 +1991,14 @@
         "type": "function",
         "z": "50f6fbc320dea49b",
         "g": "ea4ca3fed76ae949",
-        "name": "Check if order has been stopped",
-        "func": "const orders = flow.get(\"orders\")\n\nmsg.stopped=\"false\"\nif (orders.toString() === [0,0,0].toString()){\n    msg.stopped = \"true\"\n}\nreturn msg;",
+        "name": "Check if order has been stopped/from order panel",
+        "func": "const orders = flow.get(\"orders\")\n\nmsg.stopped=\"false\"\nif (orders.toString() === [0,0,0].toString()){\n    msg.stopped = \"true\"\n}\n\nif (msg.orderPanel){\n    msg.stopped = \"true\"\n}\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 190,
+        "x": 250,
         "y": 360,
         "wires": [
             [
@@ -2025,7 +2024,7 @@
         "checkall": "true",
         "repair": false,
         "outputs": 1,
-        "x": 480,
+        "x": 620,
         "y": 360,
         "wires": [
             [
@@ -2335,7 +2334,7 @@
         "value": "",
         "name": "_conveyor4",
         "x": 590,
-        "y": 1380,
+        "y": 1400,
         "wires": [
             [
                 "682355ac9bc88396"
@@ -2352,7 +2351,7 @@
         "value": "0",
         "name": "_Remover",
         "x": 590,
-        "y": 1660,
+        "y": 1680,
         "wires": [
             [
                 "682355ac9bc88396"
@@ -2473,7 +2472,7 @@
         "name": "Initialization",
         "info": "Inject variables to Factory I/O upon connection",
         "x": 310,
-        "y": 920,
+        "y": 940,
         "wires": []
     },
     {
@@ -2484,6 +2483,52 @@
         "info": "The buffer node is used to trigger the complete node, which is used to move on to the next order after the completion of an order in the database",
         "x": 4450,
         "y": 420,
+        "wires": []
+    },
+    {
+        "id": "a2176edb186d813d",
+        "type": "change",
+        "z": "50f6fbc320dea49b",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "orderPanel",
+                "pt": "msg",
+                "to": "true",
+                "tot": "bool"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1450,
+        "y": 900,
+        "wires": [
+            [
+                "efb2902c684044fb",
+                "1902d4ddd419bcc6",
+                "0dc1dac0a4e819a5"
+            ]
+        ]
+    },
+    {
+        "id": "0da4ef649a023847",
+        "type": "debug",
+        "z": "50f6fbc320dea49b",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "orderPanel",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 4660,
+        "y": 500,
         "wires": []
     },
     {
