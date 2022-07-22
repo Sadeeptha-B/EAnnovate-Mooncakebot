@@ -119,8 +119,6 @@
             "f799e9d402c11619",
             "eb94a771b004d105",
             "decd9fb025361f13",
-            "b6792239f04bfde4",
-            "537c4b3198fab4c7",
             "180c0fde980bafd8",
             "8a3d21f15207e729",
             "482dac863765cfcc"
@@ -128,7 +126,7 @@
         "x": 194,
         "y": 779,
         "w": 852,
-        "h": 1042
+        "h": 922
     },
     {
         "id": "e9cf96557e4dc034",
@@ -406,8 +404,6 @@
                 "f799e9d402c11619",
                 "eb94a771b004d105",
                 "decd9fb025361f13",
-                "b6792239f04bfde4",
-                "537c4b3198fab4c7",
                 "180c0fde980bafd8",
                 "8a3d21f15207e729"
             ]
@@ -2035,40 +2031,6 @@
             [
                 "edad8c679e19ae60",
                 "362827f4b7c7a8b5"
-            ]
-        ]
-    },
-    {
-        "id": "b6792239f04bfde4",
-        "type": "OpcUa-Item",
-        "z": "50f6fbc320dea49b",
-        "g": "cfaea44f96a90458",
-        "item": "ns=2;s=_start_btn;datatype=Boolean",
-        "datatype": "Boolean",
-        "value": "",
-        "name": "_start_btn",
-        "x": 580,
-        "y": 1720,
-        "wires": [
-            [
-                "682355ac9bc88396"
-            ]
-        ]
-    },
-    {
-        "id": "537c4b3198fab4c7",
-        "type": "OpcUa-Item",
-        "z": "50f6fbc320dea49b",
-        "g": "cfaea44f96a90458",
-        "item": "ns=2;s=_stop_btn;datatype=Boolean",
-        "datatype": "Boolean",
-        "value": "",
-        "name": "_stop_btn",
-        "x": 580,
-        "y": 1780,
-        "wires": [
-            [
-                "682355ac9bc88396"
             ]
         ]
     },

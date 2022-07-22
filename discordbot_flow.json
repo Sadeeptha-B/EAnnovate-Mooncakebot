@@ -1,28 +1,158 @@
 [
     {
-        "id": "023d3c161439f2e9",
+        "id": "cf97d56318f211dd",
         "type": "subflow",
-        "name": "Deactivate Device",
+        "name": "Insert order to Database",
         "info": "",
         "category": "",
         "in": [
             {
-                "x": 60,
+                "x": 0,
                 "y": 80,
                 "wires": [
                     {
-                        "id": "dafb536a12a69b14"
+                        "id": "bf6e1c470a7bbfa8"
                     }
                 ]
             }
         ],
         "out": [
             {
-                "x": 580,
+                "x": 680,
                 "y": 80,
                 "wires": [
                     {
-                        "id": "0914b931de1a3157",
+                        "id": "1c88cb0e89e5025c",
+                        "port": 0
+                    }
+                ]
+            }
+        ],
+        "env": [],
+        "meta": {},
+        "color": "#DDAA99"
+    },
+    {
+        "id": "bf6e1c470a7bbfa8",
+        "type": "switch",
+        "z": "cf97d56318f211dd",
+        "name": "Check if order is complete",
+        "property": "orderComplete",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "true",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 190,
+        "y": 80,
+        "wires": [
+            [
+                "1c88cb0e89e5025c",
+                "deb59162394e03be"
+            ]
+        ]
+    },
+    {
+        "id": "1c88cb0e89e5025c",
+        "type": "function",
+        "z": "cf97d56318f211dd",
+        "name": "Insert order to database",
+        "func": "\nmsg.topic = `INSERT INTO MENU_ORDER(date,user_id, order_status) VALUES \n            (${msg.date}, ${msg.user}, \"Order successful\");`\n            \nmsg.payload = \"Your order was successful!\"\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 490,
+        "y": 80,
+        "wires": [
+            [
+                "c9b27a7ed7070f64"
+            ]
+        ]
+    },
+    {
+        "id": "c9b27a7ed7070f64",
+        "type": "sqlite",
+        "z": "cf97d56318f211dd",
+        "mydb": "963ab30464d0e7c2",
+        "sqlquery": "msg.topic",
+        "sql": "",
+        "name": "Mooncake Database",
+        "x": 1160,
+        "y": 80,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "88e6cf8790042a40",
+        "type": "function",
+        "z": "cf97d56318f211dd",
+        "name": "Add each order item to the database",
+        "func": "const item = Object.keys(msg.payload)[0]\n      quantity = msg.payload[item]\n      date = msg.date;\n            \nmsg.topic = `INSERT INTO ORDER_ITEM(order_id, item_name, quantity) VALUES(\n           (SELECT order_id FROM MENU_ORDER WHERE date='${date}' AND user_id='${msg.user}'),'${item}', '${quantity}');`\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 790,
+        "y": 220,
+        "wires": [
+            [
+                "c9b27a7ed7070f64"
+            ]
+        ]
+    },
+    {
+        "id": "deb59162394e03be",
+        "type": "split",
+        "z": "cf97d56318f211dd",
+        "name": "Split each order item",
+        "splt": "\\n",
+        "spltType": "str",
+        "arraySplt": 1,
+        "arraySpltType": "len",
+        "stream": false,
+        "addname": "",
+        "x": 480,
+        "y": 220,
+        "wires": [
+            [
+                "88e6cf8790042a40"
+            ]
+        ]
+    },
+    {
+        "id": "db18efe3ac9314eb",
+        "type": "subflow",
+        "name": "Display order selection menu",
+        "info": "",
+        "category": "",
+        "in": [
+            {
+                "x": 40,
+                "y": 80,
+                "wires": [
+                    {
+                        "id": "62805e4ba46602c8"
+                    }
+                ]
+            }
+        ],
+        "out": [
+            {
+                "x": 1180,
+                "y": 80,
+                "wires": [
+                    {
+                        "id": "a77140687d405723",
                         "port": 0
                     }
                 ]
@@ -30,26 +160,249 @@
         ],
         "env": [
             {
-                "name": "DELAY",
+                "name": "PLACEHOLDER",
                 "type": "str",
-                "value": "1"
+                "value": "Choose Order ID"
+            },
+            {
+                "name": "CUSTOM_ID",
+                "type": "str",
+                "value": ""
+            },
+            {
+                "name": "SINGLE_SELECTION",
+                "type": "bool",
+                "value": "true"
             }
         ],
         "meta": {},
         "color": "#DDAA99"
     },
     {
-        "id": "0914b931de1a3157",
-        "type": "change",
-        "z": "023d3c161439f2e9",
-        "name": "",
+        "id": "dc9c41d4d73e24d0",
+        "type": "function",
+        "z": "db18efe3ac9314eb",
+        "name": "Display order ID selection",
+        "func": "let options = msg.orderIds\n\noptions = options.map(i => ({\"value\": `${i}`, \"label\": `${i}`}))\nlet maxValues = options.length\n\nmsg.payload = \"\"\n\nif (env.get(\"SINGLE_SELECTION\")){\n    maxValues = 1\n}\n\nmsg.components = [\n    {\n        \"type\": 1,\n        \"components\": [\n            {\n                \"type\": 3,\n                \"custom_id\": env.get(\"CUSTOM_ID\"),\n                \"options\": options,\n                \"placeholder\": env.get(\"PLACEHOLDER\"),\n                \"min_values\": 1,\n                \"max_values\": maxValues\n            }\n        ]\n    }\n]\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 630,
+        "y": 80,
+        "wires": [
+            [
+                "a77140687d405723"
+            ]
+        ]
+    },
+    {
+        "id": "a77140687d405723",
+        "type": "json",
+        "z": "db18efe3ac9314eb",
+        "name": "Convert to JSON to JS obj",
+        "property": "components",
+        "action": "obj",
+        "pretty": false,
+        "x": 900,
+        "y": 80,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "62805e4ba46602c8",
+        "type": "switch",
+        "z": "db18efe3ac9314eb",
+        "name": "Proceed only if there are cancellable orders",
+        "property": "orderIds",
+        "propertyType": "msg",
         "rules": [
+            {
+                "t": "nempty"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 290,
+        "y": 80,
+        "wires": [
+            [
+                "dc9c41d4d73e24d0"
+            ]
+        ]
+    },
+    {
+        "id": "765dc67df7a1e33f",
+        "type": "subflow",
+        "name": "Display Summary",
+        "info": "",
+        "category": "",
+        "in": [
+            {
+                "x": 20,
+                "y": 80,
+                "wires": [
+                    {
+                        "id": "1789fe40eaa02b9b"
+                    }
+                ]
+            }
+        ],
+        "out": [
+            {
+                "x": 940,
+                "y": 80,
+                "wires": [
+                    {
+                        "id": "a306a154e8a7c534",
+                        "port": 0
+                    }
+                ]
+            }
+        ],
+        "env": [
+            {
+                "name": "APPEND",
+                "type": "str",
+                "value": ""
+            },
+            {
+                "name": "ADDITIONAL_QUERY",
+                "type": "str",
+                "value": ""
+            }
+        ],
+        "meta": {},
+        "color": "#DDAA99"
+    },
+    {
+        "id": "1789fe40eaa02b9b",
+        "type": "function",
+        "z": "765dc67df7a1e33f",
+        "name": "Respond to !summary",
+        "func": "const userId = msg.author.id\n\nmsg.topic=`SELECT m.order_id, date, order_status, item_name, quantity FROM \n            MENU_ORDER m INNER JOIN ORDER_ITEM i ON m.order_id = i.order_id\n            WHERE user_id='${userId}' ${env.get(\"ADDITIONAL_QUERY\")};`\nreturn msg;\n\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 200,
+        "y": 80,
+        "wires": [
+            [
+                "69fcdf8e37d95d6d"
+            ]
+        ]
+    },
+    {
+        "id": "69fcdf8e37d95d6d",
+        "type": "sqlite",
+        "z": "765dc67df7a1e33f",
+        "mydb": "963ab30464d0e7c2",
+        "sqlquery": "msg.topic",
+        "sql": "",
+        "name": "Mooncake Database",
+        "x": 440,
+        "y": 80,
+        "wires": [
+            [
+                "a306a154e8a7c534"
+            ]
+        ]
+    },
+    {
+        "id": "a306a154e8a7c534",
+        "type": "function",
+        "z": "765dc67df7a1e33f",
+        "name": "Extract and format summary output",
+        "func": "if (msg.payload.length === 0){\n    msg.payload = \"You haven't made any orders previously. Hurry up and make an order!\"\n    msg.orderIds= []\n    return msg;\n} \n\nlet orderIds = []\nlet resStr = `Index\\t     Date Ordered\\t\\t\\t            Order status\\t\\t        Items\\n`\n\n//https://stackoverflow.com/questions/40774697/how-can-i-group-an-array-of-objects-by-key\nconst groupByKey = (list, key) => list.reduce((hash, obj) => ({...hash, [obj[key]]:( hash[obj[key]] || [] ).concat(obj)}), {})\n\nconst results = groupByKey(msg.payload, 'order_id'),\n      keys = Object.keys(results)\n\nfor (let i =0; i< keys.length; i++){\n    let order = results[keys[i]]\n    let itemObj = {}\n    for (let i=0; i<order.length; i++){\n        let item = order[i].item_name,\n            quantity = order[i].quantity\n        itemObj[item] = quantity\n    }\n    let orderItem = order[0],\n        order_id = orderItem.order_id,\n        date = new Date(orderItem.date).toLocaleString(),\n        order_status = orderItem.order_status,\n        itemStr = JSON.stringify(itemObj)\n        \n    orderIds.push(order_id)\n    resStr += `#${order_id}\\t\\t      ${date}     ${order_status}\\t     ${itemStr}\\n`\n}\n\nlet append = env.get(\"APPEND\")\n\nif (append !== \"\"){\n    resStr += `\\n${env.get(\"APPEND\")}`\n}\n\nmsg.payload = resStr \nmsg.orderIds = orderIds\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 720,
+        "y": 80,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "eaf0f6e02f768ad8",
+        "type": "tab",
+        "label": "Discord-bot",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "645c2c6af622055d",
+        "type": "group",
+        "z": "eaf0f6e02f768ad8",
+        "name": "Initialize database",
+        "style": {
+            "label": true
+        },
+        "nodes": [
+            "2402f6914d9d012d",
+            "29b452dc11030148",
+            "512ea85673114b35",
+            "f64c02cd4a60ca6f"
+        ],
+        "x": 74,
+        "y": 1839,
+        "w": 852,
+        "h": 182
+    },
+    {
+        "id": "4143a8afa0a0f8d3",
+        "type": "discordMessage",
+        "z": "eaf0f6e02f768ad8",
+        "name": "",
+        "token": "",
+        "x": 160,
+        "y": 500,
+        "wires": [
+            [
+                "945732e0e087895c"
+            ]
+        ]
+    },
+    {
+        "id": "6873d1a99446b6b1",
+        "type": "discordMessageManager",
+        "z": "eaf0f6e02f768ad8",
+        "name": "",
+        "channel": "",
+        "token": "",
+        "x": 2070,
+        "y": 440,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "8818d7ed4ca004da",
+        "type": "change",
+        "z": "eaf0f6e02f768ad8",
+        "name": "Respond to !order",
+        "rules": [
+            {
+                "t": "set",
+                "p": "components",
+                "pt": "msg",
+                "to": "[{\"type\":1,\"components\":[{\"type\":3,\"custom_id\":\"Order\",\"options\":[{\"label\":\"White Lotus\",\"value\":\"White Lotus\",\"description\":\"Cantonese-style mooncake. White lotus paste filling with a natural fragrance\",\"emoji\":{\"name\":\"💮\",\"id\":null}},{\"label\":\"Red Bean\",\"value\":\"Red Bean\",\"description\":\"A classic. Sweet bean paste and the outer skin makes the mooncake smooth and have a richer flavor\",\"emoji\":{\"name\":\"🥮\",\"id\":null}},{\"label\":\"Green Tea\",\"value\":\"Green Tea\",\"description\":\"Fresh natural taste. Not overly sweet and has a certain health effect!\",\"emoji\":{\"name\":\"💚\",\"id\":null}}],\"placeholder\":\"Choose your order\",\"min_values\":1,\"max_values\":3}]}]",
+                "tot": "json"
+            },
             {
                 "t": "set",
                 "p": "payload",
                 "pt": "msg",
-                "to": "false",
-                "tot": "bool"
+                "to": "Click the button below to order some mooncake!",
+                "tot": "str"
             }
         ],
         "action": "",
@@ -57,323 +410,464 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 420,
-        "y": 80,
+        "x": 770,
+        "y": 540,
         "wires": [
-            []
+            [
+                "9207ae4da593280e"
+            ]
         ]
     },
     {
-        "id": "dafb536a12a69b14",
-        "type": "delay",
-        "z": "023d3c161439f2e9",
-        "name": "",
-        "pauseType": "delay",
-        "timeout": "${DELAY}",
-        "timeoutUnits": "seconds",
-        "rate": "1",
-        "nbRateUnits": "1",
-        "rateUnits": "second",
-        "randomFirst": "0",
-        "randomLast": "5",
-        "randomUnits": "seconds",
-        "drop": false,
-        "allowrate": false,
+        "id": "9207ae4da593280e",
+        "type": "json",
+        "z": "eaf0f6e02f768ad8",
+        "name": "Convert to JSON to JS obj",
+        "property": "components",
+        "action": "obj",
+        "pretty": false,
+        "x": 1000,
+        "y": 540,
+        "wires": [
+            [
+                "6873d1a99446b6b1"
+            ]
+        ]
+    },
+    {
+        "id": "a709d8d54ea63ddd",
+        "type": "discordInteraction",
+        "z": "eaf0f6e02f768ad8",
+        "name": "MoonCake Menu Selection ",
+        "token": "",
+        "interactionType": "selectMenu",
+        "custom_id": "Order",
+        "commandResponse": "",
+        "interactionObject": true,
+        "x": 190,
+        "y": 860,
+        "wires": [
+            [
+                "2cd3d6ea1f60ec0c"
+            ]
+        ]
+    },
+    {
+        "id": "7dd3d47bdcadc134",
+        "type": "change",
+        "z": "eaf0f6e02f768ad8",
+        "name": "Respond to !help",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "embeds",
+                "pt": "msg",
+                "to": "{\"title\":\"help\",\"description\":\"Commands you can use with Mooncakes bot!\",\"color\":\"#DE5E1F\",\"fields\":[{\"name\":\"!help\",\"value\":\"Provides users with a list of valid commands.\"},{\"name\":\"!menu\",\"value\":\"Displays a menu for users to view the available mooncakes.\"},{\"name\":\"!order\",\"value\":\"This command allows users to place their orders.\"},{\"name\":\"!summary\",\"value\":\"Provides a list of all previous orders a user has made.\"},{\"name\":\"!cancel\",\"value\":\"Provides selection menu to cancel pending orders.\"},{\"name\":\"!repeat\",\"value\":\"Provides selection menu to repeat any previous order.\"}]}",
+                "tot": "json"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 770,
+        "y": 420,
+        "wires": [
+            [
+                "6873d1a99446b6b1"
+            ]
+        ]
+    },
+    {
+        "id": "b676a1bf3cb0c2f0",
+        "type": "change",
+        "z": "eaf0f6e02f768ad8",
+        "name": "Respond to !menu",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "embeds",
+                "pt": "msg",
+                "to": "{\"title\":\"Menu\",\"description\":\"Our Menu!\",\"color\":\"#DE5E1F\",\"fields\":[{\"name\":\"White Lotus Mooncake\",\"value\":\"Cantonese-style mooncake. White lotus paste filling with a natural fragrance\"},{\"name\":\"Red Bean Mooncake\",\"value\":\"A classic. Sweet bean paste and the outer skin makes the mooncake smooth and have a richer flavor\"},{\"name\":\"Green Tea Mooncake\",\"value\":\"Fresh natural taste. Not overly sweet and has a certain health effect!\"}]}",
+                "tot": "json"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 770,
+        "y": 480,
+        "wires": [
+            [
+                "6873d1a99446b6b1"
+            ]
+        ]
+    },
+    {
+        "id": "c8ed5bc045a9ea7b",
+        "type": "function",
+        "z": "eaf0f6e02f768ad8",
+        "name": "Display Quantity Selection",
+        "func": "const orderLimit = 10;\n\nconst createOptionRange = () => {\n    const options = []\n    for (i =0; i<orderLimit; i++){\n        options.push({\"value\": `${i+1}`, \"label\": `${i+1}`})\n    }\n    return options\n}\n\nmsg.components = [\n    {\n        \"type\": 1,\n        \"components\": [\n            {\n                \"type\": 3,\n                \"custom_id\": `quantity${msg.payload.replace(/\\s/g, \"\")}`,\n                \"options\": createOptionRange(),\n                \"placeholder\": \"Choose your order\",\n                \"min_values\": 1,\n                \"max_values\": 1\n            }\n        ]\n    }\n]\n\nconst orderItemAmount = flow.get(msg.user)\norderItemAmount.orderItems += 1\nflow.set(msg.user, orderItemAmount)\n\nmsg.payload = `How many ${msg.payload} Mooncakes do you need?`\n\n\nreturn msg;",
         "outputs": 1,
-        "x": 230,
-        "y": 80,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1010,
+        "y": 860,
         "wires": [
             [
-                "0914b931de1a3157"
+                "950df94f6894367c"
             ]
         ]
     },
     {
-        "id": "50f6fbc320dea49b",
-        "type": "tab",
-        "label": "Factory flow",
-        "disabled": false,
-        "info": "",
-        "env": []
-    },
-    {
-        "id": "cfaea44f96a90458",
-        "type": "group",
-        "z": "50f6fbc320dea49b",
-        "name": "Initialize variables on Factory I/O",
-        "style": {
-            "label": true
-        },
-        "nodes": [
-            "682355ac9bc88396",
-            "8c4910aea04fecc8",
-            "8a3a5a0187a20265",
-            "e9441ca61d396185",
-            "f82142b89b105ba3",
-            "2d4c3ac558366bce",
-            "9b068dd6e91fda26",
-            "90187d075165feed",
-            "e87e9d5333ca74c6",
-            "5a2bb80bda59d524",
-            "7e0e5fe4f65b0162",
-            "f799e9d402c11619",
-            "eb94a771b004d105",
-            "decd9fb025361f13",
-            "b6792239f04bfde4",
-            "537c4b3198fab4c7",
-            "180c0fde980bafd8",
-            "8a3d21f15207e729",
-            "482dac863765cfcc"
+        "id": "2cd3d6ea1f60ec0c",
+        "type": "change",
+        "z": "eaf0f6e02f768ad8",
+        "name": "Extract ordered items and user",
+        "rules": [
+            {
+                "t": "set",
+                "p": "user",
+                "pt": "msg",
+                "to": "payload.user.id",
+                "tot": "msg"
+            },
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload.values",
+                "tot": "msg"
+            }
         ],
-        "x": 194,
-        "y": 779,
-        "w": 852,
-        "h": 1042
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 490,
+        "y": 860,
+        "wires": [
+            [
+                "138ef54f5c3045cb",
+                "7790f334d28e60f8",
+                "b2ee650bfdb9164d"
+            ]
+        ]
     },
     {
-        "id": "e9cf96557e4dc034",
-        "type": "group",
-        "z": "50f6fbc320dea49b",
-        "name": "Order Dashboard",
-        "style": {
-            "label": true
-        },
-        "nodes": [
-            "9666904b6dc0d5e6",
-            "a5ba93aa8bc00072",
-            "29b1f214ec288ce2",
-            "c5561c88f0c91805",
-            "a59f091c6b5b8eef",
-            "1850e85d2d9f86f9",
-            "191afd8b426a5953",
-            "5ce6df22c9910926",
-            "a3a88abf52b9226d",
-            "23082030b9411860",
-            "cec93aa66d8c521a",
-            "c3906bba9a8796fa",
-            "94c5394832133fc2",
-            "d9acf19651088861"
-        ],
-        "x": 1294,
-        "y": 959,
-        "w": 1312,
-        "h": 482
+        "id": "138ef54f5c3045cb",
+        "type": "split",
+        "z": "eaf0f6e02f768ad8",
+        "name": "Send each item",
+        "splt": "\\n",
+        "spltType": "str",
+        "arraySplt": 1,
+        "arraySpltType": "len",
+        "stream": false,
+        "addname": "",
+        "x": 760,
+        "y": 860,
+        "wires": [
+            [
+                "c8ed5bc045a9ea7b"
+            ]
+        ]
     },
     {
-        "id": "ea4ca3fed76ae949",
-        "type": "group",
-        "z": "50f6fbc320dea49b",
-        "name": "Control Panel and Database connection",
-        "style": {
-            "label": true
-        },
-        "nodes": [
-            "c7940d8784d7bbe8",
-            "edad8c679e19ae60",
-            "08c2b476e9f11f2c",
-            "120fc7a8b2fc4584",
-            "1a8b8e7c0d66857a",
-            "163bb85765e9aa09",
-            "0195a910bc91cb04",
-            "5e84795dac32ec63",
-            "68eeaa4a891c7350",
-            "d7e5f1b70adaebd9",
-            "362827f4b7c7a8b5",
-            "9d77f75895e9fea8",
-            "09b9111ff95375dd",
-            "dfc5a2f190d5f059",
-            "5c38255a69294198",
-            "cf545a4f7c618db1"
-        ],
-        "x": 14,
-        "y": 219,
-        "w": 1372,
-        "h": 442
+        "id": "7790f334d28e60f8",
+        "type": "function",
+        "z": "eaf0f6e02f768ad8",
+        "name": "Start new order",
+        "func": "const date = new Date()\n\nmsg.embeds ={\n    \"title\": \"New Order:\",\n    \"description\": `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`,\n    \"color\": \"#DE5E1F\"\n}\n\nflow.set(msg.user, {\"orderItems\":0})\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 760,
+        "y": 800,
+        "wires": [
+            [
+                "950df94f6894367c"
+            ]
+        ]
     },
     {
-        "id": "682355ac9bc88396",
-        "type": "OpcUa-Server",
-        "z": "50f6fbc320dea49b",
-        "g": "cfaea44f96a90458",
-        "port": "53880",
-        "name": "",
-        "endpoint": "",
-        "users": "users.json",
-        "nodesetDir": "",
-        "folderName4PKI": "",
-        "autoAcceptUnknownCertificate": true,
-        "registerToDiscovery": false,
-        "constructDefaultAddressSpace": true,
-        "allowAnonymous": true,
-        "endpointNone": true,
-        "endpointSign": true,
-        "endpointSignEncrypt": true,
-        "endpointBasic128Rsa15": true,
-        "endpointBasic256": true,
-        "endpointBasic256Sha256": true,
-        "maxNodesPerBrowse": 0,
-        "maxNodesPerHistoryReadData": 0,
-        "maxNodesPerHistoryReadEvents": 0,
-        "maxNodesPerHistoryUpdateData": 0,
-        "maxNodesPerRead": 0,
-        "maxNodesPerWrite": 0,
-        "maxNodesPerMethodCall": 0,
-        "maxNodesPerRegisterNodes": 0,
-        "maxNodesPerNodeManagement": 0,
-        "maxMonitoredItemsPerCall": 0,
-        "maxNodesPerHistoryUpdateEvents": 0,
-        "maxNodesPerTranslateBrowsePathsToNodeIds": 0,
-        "maxConnectionsPerEndpoint": "60",
-        "maxMessageSize": 4096,
-        "maxBufferSize": 4096,
-        "x": 940,
-        "y": 1240,
+        "id": "392264fcba523981",
+        "type": "discordInteraction",
+        "z": "eaf0f6e02f768ad8",
+        "name": "QuantitySelection",
+        "token": "",
+        "interactionType": "selectMenu",
+        "custom_id": "quantityGreenTea,quantityWhiteLotus,quantityRedBean",
+        "commandResponse": "",
+        "interactionObject": false,
+        "x": 160,
+        "y": 1040,
+        "wires": [
+            [
+                "39cc22417d6e8e4c"
+            ]
+        ]
+    },
+    {
+        "id": "39cc22417d6e8e4c",
+        "type": "function",
+        "z": "eaf0f6e02f768ad8",
+        "name": "Save selections to context store",
+        "func": "const item = msg.payload.customId.replace('quantity', '')\nconst quantity = parseInt(msg.payload.values[0])\n\nconst userOrder = flow.get(msg.payload.user.id);\n\nif (userOrder[item] === undefined){\n    userOrder[item] = {\n        \"quantity\": quantity,\n        \"selection\": 1\n    }\n} else{\n    userOrder[item].quantity = quantity\n}\n\nflow.set(msg.payload.user.id, userOrder)\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 510,
+        "y": 1040,
         "wires": [
             []
         ]
     },
     {
-        "id": "8c4910aea04fecc8",
-        "type": "OpcUa-Item",
-        "z": "50f6fbc320dea49b",
-        "g": "cfaea44f96a90458",
-        "item": "ns=2;s=_sensor0;datatype=Boolean",
-        "datatype": "Boolean",
-        "value": "0",
-        "name": "_sensor0",
-        "x": 580,
-        "y": 820,
+        "id": "b2ee650bfdb9164d",
+        "type": "change",
+        "z": "eaf0f6e02f768ad8",
+        "name": "Send submit button",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "components",
+                "pt": "msg",
+                "to": "[{\"type\":1,\"components\":[{\"type\":2,\"custom_id\":\"orderSubmit\",\"label\":\"Submit\",\"style\":\"SUCCESS\"}]}]",
+                "tot": "json"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 770,
+        "y": 920,
         "wires": [
             [
-                "682355ac9bc88396"
+                "91b1b0aa0a0d1df5"
             ]
         ]
     },
     {
-        "id": "8a3a5a0187a20265",
-        "type": "OpcUa-Item",
-        "z": "50f6fbc320dea49b",
-        "g": "cfaea44f96a90458",
-        "item": "ns=2;s=_sensor1;datatype=Boolean",
-        "datatype": "Boolean",
-        "value": "0",
-        "name": "_sensor1",
-        "x": 580,
-        "y": 900,
+        "id": "91b1b0aa0a0d1df5",
+        "type": "json",
+        "z": "eaf0f6e02f768ad8",
+        "name": "",
+        "property": "components",
+        "action": "obj",
+        "pretty": false,
+        "x": 990,
+        "y": 920,
         "wires": [
             [
-                "682355ac9bc88396"
+                "950df94f6894367c"
             ]
         ]
     },
     {
-        "id": "e9441ca61d396185",
-        "type": "OpcUa-Item",
-        "z": "50f6fbc320dea49b",
-        "g": "cfaea44f96a90458",
-        "item": "ns=2;s=_sensor2;datatype=Boolean",
-        "datatype": "Boolean",
-        "value": "0",
-        "name": "_sensor2",
-        "x": 580,
-        "y": 1000,
-        "wires": [
-            [
-                "682355ac9bc88396"
-            ]
-        ]
-    },
-    {
-        "id": "f82142b89b105ba3",
-        "type": "OpcUa-Item",
-        "z": "50f6fbc320dea49b",
-        "g": "cfaea44f96a90458",
-        "item": "ns=2;s=_conveyor0;datatype=Boolean;value=false",
-        "datatype": "Boolean",
-        "value": "",
-        "name": "_conveyor0",
-        "x": 590,
-        "y": 1080,
-        "wires": [
-            [
-                "682355ac9bc88396"
-            ]
-        ]
-    },
-    {
-        "id": "2d4c3ac558366bce",
-        "type": "OpcUa-Item",
-        "z": "50f6fbc320dea49b",
-        "g": "cfaea44f96a90458",
-        "item": "ns=2;s=_conveyor1;datatype=Boolean;value=false",
-        "datatype": "Boolean",
-        "value": "",
-        "name": "_conveyor1",
-        "x": 590,
-        "y": 1140,
-        "wires": [
-            [
-                "682355ac9bc88396"
-            ]
-        ]
-    },
-    {
-        "id": "9b068dd6e91fda26",
-        "type": "OpcUa-Item",
-        "z": "50f6fbc320dea49b",
-        "g": "cfaea44f96a90458",
-        "item": "ns=2;s=_conveyor2;datatype=Boolean;value=false",
-        "datatype": "Boolean",
-        "value": "",
-        "name": "_conveyor2",
-        "x": 590,
-        "y": 1200,
-        "wires": [
-            [
-                "682355ac9bc88396"
-            ]
-        ]
-    },
-    {
-        "id": "90187d075165feed",
-        "type": "OpcUa-Item",
-        "z": "50f6fbc320dea49b",
-        "g": "cfaea44f96a90458",
-        "item": "ns=2;s=_conveyor3a;datatype=Boolean;value=false",
-        "datatype": "Boolean",
-        "value": "",
-        "name": "_conveyor3a",
-        "x": 590,
-        "y": 1260,
-        "wires": [
-            [
-                "682355ac9bc88396"
-            ]
-        ]
-    },
-    {
-        "id": "e87e9d5333ca74c6",
-        "type": "OpcUa-Item",
-        "z": "50f6fbc320dea49b",
-        "g": "cfaea44f96a90458",
-        "item": "ns=2;s=_conveyor3b;datatype=Boolean;value=false",
-        "datatype": "Boolean",
-        "value": "",
-        "name": "_conveyor3b",
-        "x": 590,
+        "id": "d6844393ee6666cb",
+        "type": "discordInteraction",
+        "z": "eaf0f6e02f768ad8",
+        "name": "Submit Button Interaction",
+        "token": "",
+        "interactionType": "button",
+        "custom_id": "orderSubmit",
+        "commandResponse": "",
+        "interactionObject": false,
+        "x": 190,
         "y": 1320,
         "wires": [
             [
-                "682355ac9bc88396"
+                "9191c25afea3e462"
             ]
         ]
     },
     {
-        "id": "5a2bb80bda59d524",
-        "type": "inject",
-        "z": "50f6fbc320dea49b",
-        "g": "cfaea44f96a90458",
+        "id": "9191c25afea3e462",
+        "type": "function",
+        "z": "eaf0f6e02f768ad8",
+        "name": "Obtain the order",
+        "func": "const menu = [\"WhiteLotus\", \"RedBean\", \"GreenTea\"],\n      menuRecord = flow.get(msg.payload.user.id),\n      date = new Date().getTime()\n      \nmsg.orderComplete = \"false\"\n\nlet orderCount = 0\n    selectedItems = []\n\n\nfor (let i=0; i<menu.length; i++){\n    let item = menu[i]\n    if (menuRecord[item] !== undefined){\n        orderCount += menuRecord[item].selection\n        let itemObj = {}\n        itemObj[item]=menuRecord[item].quantity\n        selectedItems.push(itemObj)\n    }\n}\n\nif (orderCount === menuRecord.orderItems){\n    msg.orderComplete = \"true\"\n    msg.user = msg.payload.user.id\n    msg.payload = selectedItems\n    msg.date = date;\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 480,
+        "y": 1320,
+        "wires": [
+            [
+                "8fad7c3a965ddc68"
+            ]
+        ]
+    },
+    {
+        "id": "945732e0e087895c",
+        "type": "switch",
+        "z": "eaf0f6e02f768ad8",
+        "name": "Check if message has a command",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "!repeat",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "!summary",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "!help",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "!menu",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "!order",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "!cancel",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 6,
+        "x": 460,
+        "y": 500,
+        "wires": [
+            [
+                "669ca1f32ea803bd"
+            ],
+            [
+                "d671c4bbae713125"
+            ],
+            [
+                "7dd3d47bdcadc134"
+            ],
+            [
+                "b676a1bf3cb0c2f0"
+            ],
+            [
+                "8818d7ed4ca004da"
+            ],
+            [
+                "1ccf8a9a47ee9b89"
+            ]
+        ]
+    },
+    {
+        "id": "950df94f6894367c",
+        "type": "discordMessageManager",
+        "z": "eaf0f6e02f768ad8",
         "name": "",
+        "channel": "",
+        "token": "",
+        "x": 1790,
+        "y": 860,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "195bb607d2363748",
+        "type": "change",
+        "z": "eaf0f6e02f768ad8",
+        "name": "Display success message",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "embeds",
+                "pt": "msg",
+                "to": "{\"title\":\"Success\",\"description\":\"Your order was successful!\",\"color\":\"#DE5E1F\"}",
+                "tot": "json"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1510,
+        "y": 1220,
+        "wires": [
+            [
+                "950df94f6894367c"
+            ]
+        ]
+    },
+    {
+        "id": "2402f6914d9d012d",
+        "type": "sqlite",
+        "z": "eaf0f6e02f768ad8",
+        "g": "645c2c6af622055d",
+        "mydb": "963ab30464d0e7c2",
+        "sqlquery": "msg.topic",
+        "sql": "",
+        "name": "Create Mooncakes.db if not present",
+        "x": 760,
+        "y": 1920,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "29b452dc11030148",
+        "type": "inject",
+        "z": "eaf0f6e02f768ad8",
+        "g": "645c2c6af622055d",
+        "name": "Initialize on start",
         "props": [
             {
                 "p": "payload"
@@ -385,2199 +879,375 @@
         ],
         "repeat": "",
         "crontab": "",
-        "once": false,
+        "once": true,
         "onceDelay": 0.1,
         "topic": "",
-        "payload": "{\"opcuaCommand\":\"addVariable\"}",
-        "payloadType": "json",
-        "x": 290,
-        "y": 1240,
+        "payload": "",
+        "payloadType": "date",
+        "x": 200,
+        "y": 1920,
         "wires": [
             [
-                "8c4910aea04fecc8",
-                "8a3a5a0187a20265",
-                "e9441ca61d396185",
-                "f82142b89b105ba3",
-                "2d4c3ac558366bce",
-                "9b068dd6e91fda26",
-                "90187d075165feed",
-                "e87e9d5333ca74c6",
-                "7e0e5fe4f65b0162",
-                "f799e9d402c11619",
-                "eb94a771b004d105",
-                "decd9fb025361f13",
-                "b6792239f04bfde4",
-                "537c4b3198fab4c7",
-                "180c0fde980bafd8",
-                "8a3d21f15207e729"
+                "512ea85673114b35",
+                "f64c02cd4a60ca6f"
             ]
         ]
     },
     {
-        "id": "337d458bd8613c5a",
+        "id": "512ea85673114b35",
+        "type": "change",
+        "z": "eaf0f6e02f768ad8",
+        "g": "645c2c6af622055d",
+        "name": "Create MENU_ORDER Table",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "CREATE TABLE IF NOT EXISTS MENU_ORDER          (order_id INTEGER PRIMARY KEY, date INT, user_id TEXT, order_status TEXT);",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 460,
+        "y": 1880,
+        "wires": [
+            [
+                "2402f6914d9d012d"
+            ]
+        ]
+    },
+    {
+        "id": "f64c02cd4a60ca6f",
+        "type": "change",
+        "z": "eaf0f6e02f768ad8",
+        "g": "645c2c6af622055d",
+        "name": "Create ORDER_ITEM table",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "CREATE TABLE IF NOT EXISTS ORDER_ITEM(order_id INTEGER, item_name TEXT, quantity INT, PRIMARY KEY(order_id, item_name));",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 460,
+        "y": 1980,
+        "wires": [
+            [
+                "2402f6914d9d012d"
+            ]
+        ]
+    },
+    {
+        "id": "caf67e79d879dae5",
         "type": "function",
-        "z": "50f6fbc320dea49b",
-        "name": "Specify current sensor",
-        "func": "let sensor_no = flow.get(\"sensor_no\")\n\nmsg.topic = \"ns=2;s=_sensor\"+ sensor_no +\";datatype=Boolean\"\nreturn msg",
+        "z": "eaf0f6e02f768ad8",
+        "name": "Delete from MENU_ORDER",
+        "func": "const userId = msg.payload.user.id\nconst order_ids = msg.payload.values\n\nmsg.user = userId\n\nmsg.topic=`DELETE FROM MENU_ORDER WHERE user_id='${userId}' AND order_id IN (${order_ids.toString()})`\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 2060,
-        "y": 420,
-        "wires": [
-            [
-                "be0d45040b95f2ae"
-            ]
-        ]
-    },
-    {
-        "id": "be0d45040b95f2ae",
-        "type": "OpcUa-Client",
-        "z": "50f6fbc320dea49b",
-        "endpoint": "df2f1b827a0d1854",
-        "action": "read",
-        "deadbandtype": "a",
-        "deadbandvalue": 1,
-        "time": 10,
-        "timeUnit": "s",
-        "certificate": "n",
-        "localfile": "",
-        "localkeyfile": "",
-        "securitymode": "None",
-        "securitypolicy": "None",
-        "folderName4PKI": "",
-        "name": "",
-        "x": 2280,
-        "y": 420,
-        "wires": [
-            [
-                "049a58e18d900ad0"
-            ]
-        ]
-    },
-    {
-        "id": "049a58e18d900ad0",
-        "type": "function",
-        "z": "50f6fbc320dea49b",
-        "name": "Track order status",
-        "func": "let sensor_no = flow.get(\"sensor_no\")\nlet order_no = flow.get(\"orders\")\nlet complete_orders = flow.get(\"completed_orders\")\nlet prevSenReading = flow.get(\"previousSensorReading\")\nmsg.completeFlavor = \"false\";\nmsg.completeOrder = \"false\";\n\nif(msg.payload & !prevSenReading){\n    prevSenReading = true\n    complete_orders[sensor_no] += 1\n    flow.set(\"completed_orders\", complete_orders)\n} else{\n    prevSenReading = false\n}\n\nif(complete_orders[sensor_no] >= order_no[sensor_no]){\n        // Turn on conveyor here\n        msg.emit = \"false\"\n        sensor_no += 1\n        if(sensor_no >= order_no.length){\n            msg.completeOrder = \"true\";\n        }\n        flow.set(\"sensor_no\", sensor_no)\n        msg.completeFlavor = \"true\"\n}\nflow.set(\"previousSensorReading\", prevSenReading)\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 2510,
-        "y": 420,
-        "wires": [
-            [
-                "262364abb2b4947e",
-                "6a5a152feed870a2",
-                "cc1529202d8ee3be",
-                "653bc09719c75908"
-            ]
-        ]
-    },
-    {
-        "id": "19da82eed8cb5c0a",
-        "type": "OpcUa-Client",
-        "z": "50f6fbc320dea49b",
-        "endpoint": "df2f1b827a0d1854",
-        "action": "write",
-        "deadbandtype": "a",
-        "deadbandvalue": 1,
-        "time": 10,
-        "timeUnit": "s",
-        "certificate": "n",
-        "localfile": "",
-        "localkeyfile": "",
-        "securitymode": "None",
-        "securitypolicy": "None",
-        "folderName4PKI": "",
-        "name": "",
-        "x": 3560,
-        "y": 420,
-        "wires": [
-            [
-                "0888304c6f85ced3"
-            ]
-        ]
-    },
-    {
-        "id": "7e0e5fe4f65b0162",
-        "type": "OpcUa-Item",
-        "z": "50f6fbc320dea49b",
-        "g": "cfaea44f96a90458",
-        "item": "ns=2;s=_Emitter0;datatype=Boolean;value=false",
-        "datatype": "Boolean",
-        "value": "0",
-        "name": "_Emitter0",
-        "x": 580,
-        "y": 1420,
-        "wires": [
-            [
-                "682355ac9bc88396"
-            ]
-        ]
-    },
-    {
-        "id": "f799e9d402c11619",
-        "type": "OpcUa-Item",
-        "z": "50f6fbc320dea49b",
-        "g": "cfaea44f96a90458",
-        "item": "ns=2;s=_Emitter1;datatype=Boolean;value=false",
-        "datatype": "Boolean",
-        "value": "0",
-        "name": "_Emitter1",
-        "x": 580,
+        "x": 400,
         "y": 1480,
         "wires": [
             [
-                "682355ac9bc88396"
+                "04e94377dc486842"
             ]
         ]
     },
     {
-        "id": "eb94a771b004d105",
-        "type": "OpcUa-Item",
-        "z": "50f6fbc320dea49b",
-        "g": "cfaea44f96a90458",
-        "item": "ns=2;s=_Emitter2;datatype=Boolean;value=false",
-        "datatype": "Boolean",
-        "value": "0",
-        "name": "_Emitter2",
-        "x": 580,
-        "y": 1540,
-        "wires": [
-            [
-                "682355ac9bc88396"
-            ]
-        ]
-    },
-    {
-        "id": "0f5dfae776165a61",
-        "type": "OpcUa-Client",
-        "z": "50f6fbc320dea49b",
-        "endpoint": "df2f1b827a0d1854",
-        "action": "write",
-        "deadbandtype": "a",
-        "deadbandvalue": 1,
-        "time": 10,
-        "timeUnit": "s",
-        "certificate": "n",
-        "localfile": "",
-        "localkeyfile": "",
-        "securitymode": "None",
-        "securitypolicy": "None",
-        "folderName4PKI": "",
-        "name": "",
-        "x": 3980,
-        "y": 420,
-        "wires": [
-            [
-                "8aa33ee3117a0857"
-            ]
-        ]
-    },
-    {
-        "id": "262364abb2b4947e",
-        "type": "switch",
-        "z": "50f6fbc320dea49b",
-        "name": "Check if a flavor is complete",
-        "property": "completeFlavor",
-        "propertyType": "msg",
-        "rules": [
-            {
-                "t": "eq",
-                "v": "true",
-                "vt": "str"
-            }
-        ],
-        "checkall": "true",
-        "repair": false,
-        "outputs": 1,
-        "x": 2800,
-        "y": 420,
-        "wires": [
-            [
-                "27a478cab0e2a5f3",
-                "fa2abe40a593d651"
-            ]
-        ]
-    },
-    {
-        "id": "3459c41fb2b21d27",
-        "type": "change",
-        "z": "50f6fbc320dea49b",
-        "name": "Start conveyor belt:3a",
-        "rules": [
-            {
-                "t": "set",
-                "p": "payload",
-                "pt": "msg",
-                "to": "true",
-                "tot": "bool"
-            },
-            {
-                "t": "set",
-                "p": "topic",
-                "pt": "msg",
-                "to": "ns=2;s=_conveyor3a;datatype=Boolean",
-                "tot": "str"
-            }
-        ],
-        "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 3320,
-        "y": 420,
-        "wires": [
-            [
-                "19da82eed8cb5c0a"
-            ]
-        ]
-    },
-    {
-        "id": "27a478cab0e2a5f3",
-        "type": "delay",
-        "z": "50f6fbc320dea49b",
-        "name": "Await delivery of box",
-        "pauseType": "delay",
-        "timeout": "1.65",
-        "timeoutUnits": "seconds",
-        "rate": "1",
-        "nbRateUnits": "1",
-        "rateUnits": "second",
-        "randomFirst": "1",
-        "randomLast": "5",
-        "randomUnits": "seconds",
-        "drop": false,
-        "allowrate": false,
-        "outputs": 1,
-        "x": 3080,
-        "y": 420,
-        "wires": [
-            [
-                "3459c41fb2b21d27"
-            ]
-        ]
-    },
-    {
-        "id": "8a99b791c7e9a6ed",
-        "type": "trigger",
-        "z": "50f6fbc320dea49b",
-        "name": "Polling loop",
-        "op1": "",
-        "op2": "",
-        "op1type": "date",
-        "op2type": "date",
-        "duration": "-600",
-        "extend": false,
-        "overrideDelay": false,
-        "units": "ms",
-        "reset": "",
-        "bytopic": "all",
-        "topic": "topic",
-        "outputs": 1,
-        "x": 1850,
-        "y": 420,
-        "wires": [
-            [
-                "337d458bd8613c5a",
-                "4a7eb024243e8707"
-            ]
-        ]
-    },
-    {
-        "id": "6a5a152feed870a2",
-        "type": "switch",
-        "z": "50f6fbc320dea49b",
-        "name": "Check if order is complete",
-        "property": "completeOrder",
-        "propertyType": "msg",
-        "rules": [
-            {
-                "t": "eq",
-                "v": "true",
-                "vt": "str"
-            }
-        ],
-        "checkall": "true",
-        "repair": false,
-        "outputs": 1,
-        "x": 2790,
-        "y": 480,
-        "wires": [
-            [
-                "288b5c0ad74e2f53"
-            ]
-        ]
-    },
-    {
-        "id": "be8269e2544d6f6d",
-        "type": "change",
-        "z": "50f6fbc320dea49b",
-        "name": "Start second conveyor belt:3b",
-        "rules": [
-            {
-                "t": "set",
-                "p": "payload",
-                "pt": "msg",
-                "to": "true",
-                "tot": "bool"
-            },
-            {
-                "t": "set",
-                "p": "topic",
-                "pt": "msg",
-                "to": "ns=2;s=_conveyor3b;datatype=Boolean",
-                "tot": "str"
-            }
-        ],
-        "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 3290,
-        "y": 480,
-        "wires": [
-            [
-                "f7c61fdcb68bfc15"
-            ]
-        ]
-    },
-    {
-        "id": "288b5c0ad74e2f53",
-        "type": "delay",
-        "z": "50f6fbc320dea49b",
-        "name": "Await delivery of box",
-        "pauseType": "delay",
-        "timeout": "2",
-        "timeoutUnits": "seconds",
-        "rate": "1",
-        "nbRateUnits": "1",
-        "rateUnits": "second",
-        "randomFirst": "1",
-        "randomLast": "5",
-        "randomUnits": "seconds",
-        "drop": false,
-        "allowrate": false,
-        "outputs": 1,
-        "x": 3040,
-        "y": 480,
-        "wires": [
-            [
-                "be8269e2544d6f6d"
-            ]
-        ]
-    },
-    {
-        "id": "f7c61fdcb68bfc15",
-        "type": "OpcUa-Client",
-        "z": "50f6fbc320dea49b",
-        "endpoint": "df2f1b827a0d1854",
-        "action": "write",
-        "deadbandtype": "a",
-        "deadbandvalue": 1,
-        "time": 10,
-        "timeUnit": "s",
-        "certificate": "n",
-        "localfile": "",
-        "localkeyfile": "",
-        "securitymode": "None",
-        "securitypolicy": "None",
-        "folderName4PKI": "",
-        "name": "",
-        "x": 3560,
-        "y": 480,
-        "wires": [
-            [
-                "c6748c867f5a607e"
-            ]
-        ]
-    },
-    {
-        "id": "b318d938192a9266",
-        "type": "OpcUa-Client",
-        "z": "50f6fbc320dea49b",
-        "endpoint": "df2f1b827a0d1854",
-        "action": "write",
-        "deadbandtype": "a",
-        "deadbandvalue": 1,
-        "time": 10,
-        "timeUnit": "s",
-        "certificate": "n",
-        "localfile": "",
-        "localkeyfile": "",
-        "securitymode": "None",
-        "securitypolicy": "None",
-        "folderName4PKI": "",
-        "name": "",
-        "x": 4100,
-        "y": 480,
-        "wires": [
-            [
-                "4e9df0bd797199cd",
-                "9981caba16606c21"
-            ]
-        ]
-    },
-    {
-        "id": "fa2abe40a593d651",
-        "type": "change",
-        "z": "50f6fbc320dea49b",
-        "name": "Reset polling loop",
-        "rules": [
-            {
-                "t": "set",
-                "p": "reset",
-                "pt": "msg",
-                "to": "",
-                "tot": "date"
-            }
-        ],
-        "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 1650,
-        "y": 200,
-        "wires": [
-            [
-                "8a99b791c7e9a6ed"
-            ]
-        ]
-    },
-    {
-        "id": "8aa33ee3117a0857",
-        "type": "change",
-        "z": "50f6fbc320dea49b",
-        "name": "Restarts polling loop",
-        "rules": [
-            {
-                "t": "set",
-                "p": "payload",
-                "pt": "msg",
-                "to": "",
-                "tot": "date"
-            }
-        ],
-        "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 1660,
-        "y": 60,
-        "wires": [
-            [
-                "8a99b791c7e9a6ed"
-            ]
-        ]
-    },
-    {
-        "id": "1f42af49ad9e98ca",
-        "type": "function",
-        "z": "50f6fbc320dea49b",
-        "name": "Initialize Variables",
-        "func": "flow.set(\"sensor_no\",0)\nflow.set(\"completed_orders\", [0,0,0])\nflow.set(\"previousSensorReading\", false)\n\nmsg.payload = flow.get(\"completed_orders\")\n\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 1650,
-        "y": 420,
-        "wires": [
-            [
-                "8a99b791c7e9a6ed"
-            ]
-        ]
-    },
-    {
-        "id": "cc1529202d8ee3be",
-        "type": "switch",
-        "z": "50f6fbc320dea49b",
-        "name": "Check if all sensors polled",
-        "property": "sensor_no",
-        "propertyType": "flow",
-        "rules": [
-            {
-                "t": "cont",
-                "v": "3",
-                "vt": "str"
-            }
-        ],
-        "checkall": "true",
-        "repair": false,
-        "outputs": 1,
-        "x": 2790,
-        "y": 360,
-        "wires": [
-            [
-                "fa2abe40a593d651"
-            ]
-        ]
-    },
-    {
-        "id": "decd9fb025361f13",
-        "type": "OpcUa-Item",
-        "z": "50f6fbc320dea49b",
-        "g": "cfaea44f96a90458",
-        "item": "ns=2;s=_Emitter3;datatype=Boolean;value=false",
-        "datatype": "Boolean",
-        "value": "0",
-        "name": "_Emitter3",
-        "x": 580,
-        "y": 1600,
-        "wires": [
-            [
-                "682355ac9bc88396"
-            ]
-        ]
-    },
-    {
-        "id": "efb2902c684044fb",
-        "type": "change",
-        "z": "50f6fbc320dea49b",
-        "name": "Start conveyor belt: 3a",
-        "rules": [
-            {
-                "t": "set",
-                "p": "payload",
-                "pt": "msg",
-                "to": "true",
-                "tot": "bool"
-            },
-            {
-                "t": "set",
-                "p": "topic",
-                "pt": "msg",
-                "to": "ns=2;s=_conveyor3a;datatype=Boolean",
-                "tot": "str"
-            }
-        ],
-        "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 1660,
-        "y": 580,
-        "wires": [
-            [
-                "633cb6faefc7715d"
-            ]
-        ]
-    },
-    {
-        "id": "633cb6faefc7715d",
-        "type": "OpcUa-Client",
-        "z": "50f6fbc320dea49b",
-        "endpoint": "df2f1b827a0d1854",
-        "action": "write",
-        "deadbandtype": "a",
-        "deadbandvalue": 1,
-        "time": 10,
-        "timeUnit": "s",
-        "certificate": "n",
-        "localfile": "",
-        "localkeyfile": "",
-        "securitymode": "None",
-        "securitypolicy": "None",
-        "folderName4PKI": "",
-        "name": "",
-        "x": 1880,
-        "y": 580,
-        "wires": [
-            [
-                "24afb6b52c392d21"
-            ]
-        ]
-    },
-    {
-        "id": "19f367060b4b003d",
-        "type": "OpcUa-Client",
-        "z": "50f6fbc320dea49b",
-        "endpoint": "df2f1b827a0d1854",
-        "action": "write",
-        "deadbandtype": "a",
-        "deadbandvalue": 1,
-        "time": 10,
-        "timeUnit": "s",
-        "certificate": "n",
-        "localfile": "",
-        "localkeyfile": "",
-        "securitymode": "None",
-        "securitypolicy": "None",
-        "folderName4PKI": "",
-        "name": "",
-        "x": 2500,
-        "y": 580,
-        "wires": [
-            [
-                "1f42af49ad9e98ca"
-            ]
-        ]
-    },
-    {
-        "id": "1902d4ddd419bcc6",
-        "type": "change",
-        "z": "50f6fbc320dea49b",
-        "name": "Emit new stackable box",
-        "rules": [
-            {
-                "t": "set",
-                "p": "payload",
-                "pt": "msg",
-                "to": "true",
-                "tot": "bool"
-            },
-            {
-                "t": "set",
-                "p": "topic",
-                "pt": "msg",
-                "to": "ns=2;s=_Emitter3;datatype=Boolean",
-                "tot": "str"
-            }
-        ],
-        "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 1670,
-        "y": 660,
-        "wires": [
-            [
-                "955853a3ca9d07a6"
-            ]
-        ]
-    },
-    {
-        "id": "955853a3ca9d07a6",
-        "type": "OpcUa-Client",
-        "z": "50f6fbc320dea49b",
-        "endpoint": "df2f1b827a0d1854",
-        "action": "write",
-        "deadbandtype": "a",
-        "deadbandvalue": 1,
-        "time": 10,
-        "timeUnit": "s",
-        "certificate": "n",
-        "localfile": "",
-        "localkeyfile": "",
-        "securitymode": "None",
-        "securitypolicy": "None",
-        "folderName4PKI": "",
-        "name": "",
-        "x": 1900,
-        "y": 660,
-        "wires": [
-            [
-                "85830c09d999e69c"
-            ]
-        ]
-    },
-    {
-        "id": "96806e48bb35917c",
-        "type": "OpcUa-Client",
-        "z": "50f6fbc320dea49b",
-        "endpoint": "df2f1b827a0d1854",
-        "action": "write",
-        "deadbandtype": "a",
-        "deadbandvalue": 1,
-        "time": 10,
-        "timeUnit": "s",
-        "certificate": "n",
-        "localfile": "",
-        "localkeyfile": "",
-        "securitymode": "None",
-        "securitypolicy": "None",
-        "folderName4PKI": "",
-        "name": "",
-        "x": 2480,
-        "y": 660,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "85830c09d999e69c",
-        "type": "subflow:023d3c161439f2e9",
-        "z": "50f6fbc320dea49b",
-        "name": "Stop emitting stackable boxes",
-        "x": 2170,
-        "y": 660,
-        "wires": [
-            [
-                "96806e48bb35917c"
-            ]
-        ]
-    },
-    {
-        "id": "24afb6b52c392d21",
-        "type": "subflow:023d3c161439f2e9",
-        "z": "50f6fbc320dea49b",
-        "name": "Let box move and stop conveyor belt:3a",
-        "env": [
-            {
-                "name": "DELAY",
-                "value": "3",
-                "type": "str"
-            }
-        ],
-        "x": 2200,
-        "y": 580,
-        "wires": [
-            [
-                "19f367060b4b003d"
-            ]
-        ]
-    },
-    {
-        "id": "c6748c867f5a607e",
-        "type": "subflow:023d3c161439f2e9",
-        "z": "50f6fbc320dea49b",
-        "name": "Stop second conveyor belt after wait:3b",
-        "env": [
-            {
-                "name": "DELAY",
-                "value": "3",
-                "type": "str"
-            }
-        ],
-        "x": 3840,
-        "y": 480,
-        "wires": [
-            [
-                "b318d938192a9266"
-            ]
-        ]
-    },
-    {
-        "id": "0888304c6f85ced3",
-        "type": "subflow:023d3c161439f2e9",
-        "z": "50f6fbc320dea49b",
-        "name": "Stop conveyor belt:3a",
-        "env": [
-            {
-                "name": "DELAY",
-                "value": "3.9",
-                "type": "str"
-            }
-        ],
-        "x": 3760,
-        "y": 420,
-        "wires": [
-            [
-                "0f5dfae776165a61"
-            ]
-        ]
-    },
-    {
-        "id": "651961b6a01f37ae",
-        "type": "change",
-        "z": "50f6fbc320dea49b",
-        "name": "Turn off Emitter",
-        "rules": [
-            {
-                "t": "set",
-                "p": "payload",
-                "pt": "msg",
-                "to": "false",
-                "tot": "bool"
-            }
-        ],
-        "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 3520,
-        "y": 200,
-        "wires": [
-            [
-                "8f0f9a090961f83e"
-            ]
-        ]
-    },
-    {
-        "id": "8f0f9a090961f83e",
-        "type": "OpcUa-Client",
-        "z": "50f6fbc320dea49b",
-        "endpoint": "df2f1b827a0d1854",
-        "action": "write",
-        "deadbandtype": "a",
-        "deadbandvalue": 1,
-        "time": 10,
-        "timeUnit": "s",
-        "certificate": "n",
-        "localfile": "",
-        "localkeyfile": "",
-        "securitymode": "None",
-        "securitypolicy": "None",
-        "folderName4PKI": "",
-        "name": "",
-        "x": 3700,
-        "y": 200,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "3c79ac1d841ec829",
-        "type": "switch",
-        "z": "50f6fbc320dea49b",
-        "name": "Is emitting complete?",
-        "property": "emit",
-        "propertyType": "msg",
-        "rules": [
-            {
-                "t": "eq",
-                "v": "false",
-                "vt": "str"
-            }
-        ],
-        "checkall": "true",
-        "repair": false,
-        "outputs": 1,
-        "x": 3300,
-        "y": 200,
-        "wires": [
-            [
-                "651961b6a01f37ae",
-                "0573fb9cd7502247"
-            ]
-        ]
-    },
-    {
-        "id": "e8a767d21d2e7c01",
-        "type": "OpcUa-Client",
-        "z": "50f6fbc320dea49b",
-        "endpoint": "df2f1b827a0d1854",
-        "action": "write",
-        "deadbandtype": "a",
-        "deadbandvalue": 1,
-        "time": 10,
-        "timeUnit": "s",
-        "certificate": "n",
-        "localfile": "",
-        "localkeyfile": "",
-        "securitymode": "None",
-        "securitypolicy": "None",
-        "folderName4PKI": "",
-        "name": "",
-        "x": 3160,
-        "y": 60,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "d4520b577ac63520",
-        "type": "switch",
-        "z": "50f6fbc320dea49b",
-        "name": "Check if emitting is needed",
-        "property": "emit",
-        "propertyType": "msg",
-        "rules": [
-            {
-                "t": "eq",
-                "v": "true",
-                "vt": "str"
-            }
-        ],
-        "checkall": "true",
-        "repair": false,
-        "outputs": 1,
-        "x": 2580,
-        "y": 100,
-        "wires": [
-            [
-                "ebeceb5658f4fbed",
-                "e46fa7de32735ff0"
-            ]
-        ]
-    },
-    {
-        "id": "4a7eb024243e8707",
-        "type": "function",
-        "z": "50f6fbc320dea49b",
-        "name": "Track emission",
-        "func": "let orders = flow.get(\"orders\")\nlet completed_orders = flow.get(\"completed_orders\")\nlet sensor_no = flow.get(\"sensor_no\")\nmsg.topic = \"ns=2;s=_Emitter\"+sensor_no+\";datatype=Boolean\"\nif(completed_orders[sensor_no] < orders[sensor_no]){\n    msg.emit = \"true\"\n}\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 2320,
-        "y": 100,
-        "wires": [
-            [
-                "d4520b577ac63520"
-            ]
-        ]
-    },
-    {
-        "id": "653bc09719c75908",
-        "type": "function",
-        "z": "50f6fbc320dea49b",
-        "name": "Get current emitter",
-        "func": "let sensor_no = flow.get(\"sensor_no\") - 1\n\nmsg.topic = \"ns=2;s=_Emitter\"+sensor_no+\";datatype=Boolean\"\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 3070,
-        "y": 200,
-        "wires": [
-            [
-                "3c79ac1d841ec829"
-            ]
-        ]
-    },
-    {
-        "id": "ebeceb5658f4fbed",
-        "type": "change",
-        "z": "50f6fbc320dea49b",
-        "name": "Turn on Emitter",
-        "rules": [
-            {
-                "t": "set",
-                "p": "payload",
-                "pt": "msg",
-                "to": "true",
-                "tot": "bool"
-            }
-        ],
-        "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 2960,
-        "y": 60,
-        "wires": [
-            [
-                "e8a767d21d2e7c01"
-            ]
-        ]
-    },
-    {
-        "id": "c7940d8784d7bbe8",
-        "type": "ui_button",
-        "z": "50f6fbc320dea49b",
-        "g": "ea4ca3fed76ae949",
-        "name": "Start Button",
-        "group": "917a6a0ec30b9da8",
-        "order": 1,
-        "width": 0,
-        "height": 0,
-        "passthru": false,
-        "label": "Start",
-        "tooltip": "",
-        "color": "",
-        "bgcolor": "",
-        "className": "",
-        "icon": "",
-        "payload": "",
-        "payloadType": "str",
-        "topic": "topic",
-        "topicType": "msg",
-        "x": 130,
-        "y": 460,
-        "wires": [
-            [
-                "edad8c679e19ae60"
-            ]
-        ]
-    },
-    {
-        "id": "edad8c679e19ae60",
-        "type": "function",
-        "z": "50f6fbc320dea49b",
-        "g": "ea4ca3fed76ae949",
-        "name": "Query pending orders",
-        "func": "msg.topic=`SELECT m.order_id, item_name, quantity FROM \n            MENU_ORDER m INNER JOIN ORDER_ITEM i ON m.order_id = i.order_id\n            WHERE order_status=\"Order successful\" ORDER BY m.date`\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 380,
-        "y": 460,
-        "wires": [
-            [
-                "08c2b476e9f11f2c"
-            ]
-        ]
-    },
-    {
-        "id": "08c2b476e9f11f2c",
-        "type": "sqlite",
-        "z": "50f6fbc320dea49b",
-        "g": "ea4ca3fed76ae949",
-        "mydb": "4cb129b3923edcd0",
-        "sqlquery": "msg.topic",
-        "sql": "",
-        "name": "",
-        "x": 660,
-        "y": 460,
-        "wires": [
-            [
-                "120fc7a8b2fc4584"
-            ]
-        ]
-    },
-    {
-        "id": "120fc7a8b2fc4584",
-        "type": "function",
-        "z": "50f6fbc320dea49b",
-        "g": "ea4ca3fed76ae949",
-        "name": "Identify current order",
-        "func": "const groupByKey = (list, key) => list.reduce((hash, obj) => ({...hash, [obj[key]]:( hash[obj[key]] || [] ).concat(obj)}), {})\n\nconst results = groupByKey(msg.payload, 'order_id'),\n      keys = Object.keys(results)\n      \nmsg.order_made = \"true\"\n\nif (keys.length === 0){\n    msg.order_made = \"false\"\n    msg.payload=\"No orders remaining\"\n    return msg;\n}\n   \nconst order_id = keys[0],\n      current_order = results[keys[0]]\n        \nlet item, quantity;\nlet order_array = [0,0,0]\n\nfor (let i=0; i<current_order.length; i++){\n    item = current_order[i].item_name,\n    quantity = current_order[i].quantity\n    setOrder(item, quantity)\n}\nflow.set(\"orders\", order_array)\n\n\nfunction setOrder(itemName, quantity){\n    let index;\n    if (itemName === \"WhiteLotus\"){\n        index = 0\n    } else if (itemName === \"RedBean\"){\n        index = 1\n    } else if (itemName === \"GreenTea\"){\n        index = 2\n    } else {\n        throw new Error(\"Unrecognized order\")\n    }\n    order_array[index] = Math.ceil(quantity/5)\n}\n\nmsg.topic = `UPDATE MENU_ORDER SET order_status=\"Making mooncakes\"\n             WHERE order_id=${order_id}`\nmsg.payload = \"Making mooncakes\"\nflow.set(\"order_id\", order_id)\n\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 940,
-        "y": 460,
-        "wires": [
-            [
-                "68eeaa4a891c7350",
-                "163bb85765e9aa09"
-            ]
-        ]
-    },
-    {
-        "id": "1a8b8e7c0d66857a",
-        "type": "ui_button",
-        "z": "50f6fbc320dea49b",
-        "g": "ea4ca3fed76ae949",
-        "name": "Stop Button",
-        "group": "917a6a0ec30b9da8",
-        "order": 2,
-        "width": 0,
-        "height": 0,
-        "passthru": false,
-        "label": "Stop",
-        "tooltip": "",
-        "color": "",
-        "bgcolor": "",
-        "className": "",
-        "icon": "",
-        "payload": "",
-        "payloadType": "str",
-        "topic": "topic",
-        "topicType": "msg",
-        "x": 130,
-        "y": 560,
-        "wires": [
-            [
-                "5e84795dac32ec63"
-            ]
-        ]
-    },
-    {
-        "id": "163bb85765e9aa09",
-        "type": "ui_text",
-        "z": "50f6fbc320dea49b",
-        "g": "ea4ca3fed76ae949",
-        "group": "917a6a0ec30b9da8",
-        "order": 3,
-        "width": 0,
-        "height": 0,
-        "name": "",
-        "label": "Status indicator",
-        "format": "{{msg.payload}}",
-        "layout": "row-spread",
-        "className": "",
-        "x": 1180,
-        "y": 560,
-        "wires": []
-    },
-    {
-        "id": "0195a910bc91cb04",
-        "type": "complete",
-        "z": "50f6fbc320dea49b",
-        "g": "ea4ca3fed76ae949",
-        "name": "Trigger if an order is complete",
-        "scope": [
-            "4e9df0bd797199cd"
-        ],
-        "uncaught": false,
+        "id": "5439f07dc8b2f2ee",
+        "type": "discordInteraction",
+        "z": "eaf0f6e02f768ad8",
+        "name": "CancelSelection",
+        "token": "",
+        "interactionType": "selectMenu",
+        "custom_id": "OrderCancel",
+        "commandResponse": "",
+        "interactionObject": false,
         "x": 160,
-        "y": 260,
+        "y": 1480,
         "wires": [
             [
-                "cf545a4f7c618db1"
+                "caf67e79d879dae5",
+                "5fa049f6a5e694ba",
+                "91fedb63ef035c70"
             ]
         ]
     },
     {
-        "id": "5e84795dac32ec63",
-        "type": "function",
-        "z": "50f6fbc320dea49b",
-        "g": "ea4ca3fed76ae949",
-        "name": "Reset state",
-        "func": "msg.invalid_reset = \"false\"\n\nlet order_id = flow.get(\"order_id\")\nif (order_id === undefined){\n    msg.invalid_reset = \"true\"\n    msg.payload = \"\"\n    return msg;\n} \n\nmsg.payload = \"Order paused\"\nflow.set(\"orders\", [0,0,0])\n\nmsg.topic = `UPDATE MENU_ORDER SET order_status=\"Order successful\"\n             WHERE order_id=${order_id}`\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 490,
-        "y": 560,
-        "wires": [
-            [
-                "163bb85765e9aa09",
-                "9d77f75895e9fea8"
-            ]
-        ]
-    },
-    {
-        "id": "9666904b6dc0d5e6",
-        "type": "ui_numeric",
-        "z": "50f6fbc320dea49b",
-        "g": "e9cf96557e4dc034",
-        "name": "White Lotus Picker",
-        "label": "White Lotus ",
-        "tooltip": "",
-        "group": "229fdb851d9f2429",
-        "order": 1,
-        "width": 0,
-        "height": 0,
-        "wrap": false,
-        "passthru": false,
-        "topic": "payload",
-        "topicType": "msg",
-        "format": "{{value}}",
-        "min": 0,
-        "max": "3",
-        "step": 1,
-        "className": "",
-        "x": 2190,
-        "y": 1060,
-        "wires": [
-            [
-                "c5561c88f0c91805"
-            ]
-        ]
-    },
-    {
-        "id": "a5ba93aa8bc00072",
-        "type": "ui_numeric",
-        "z": "50f6fbc320dea49b",
-        "g": "e9cf96557e4dc034",
-        "name": "Red Bean Picker",
-        "label": "Red Bean",
-        "tooltip": "",
-        "group": "229fdb851d9f2429",
-        "order": 1,
-        "width": 0,
-        "height": 0,
-        "wrap": false,
-        "passthru": false,
-        "topic": "payload",
-        "topicType": "msg",
-        "format": "{{value}}",
-        "min": 0,
-        "max": "3",
-        "step": 1,
-        "className": "",
-        "x": 2190,
-        "y": 1120,
-        "wires": [
-            [
-                "a59f091c6b5b8eef"
-            ]
-        ]
-    },
-    {
-        "id": "29b1f214ec288ce2",
-        "type": "ui_numeric",
-        "z": "50f6fbc320dea49b",
-        "g": "e9cf96557e4dc034",
-        "name": "Green Tea Picker",
-        "label": "Green Tea",
-        "tooltip": "",
-        "group": "229fdb851d9f2429",
-        "order": 1,
-        "width": 0,
-        "height": 0,
-        "wrap": false,
-        "passthru": false,
-        "topic": "payload",
-        "topicType": "msg",
-        "format": "{{value}}",
-        "min": 0,
-        "max": "3",
-        "step": 1,
-        "className": "",
-        "x": 2190,
-        "y": 1180,
-        "wires": [
-            [
-                "1850e85d2d9f86f9"
-            ]
-        ]
-    },
-    {
-        "id": "c5561c88f0c91805",
-        "type": "function",
-        "z": "50f6fbc320dea49b",
-        "g": "e9cf96557e4dc034",
-        "name": "Set White Lotus Amount",
-        "func": "let orders = flow.get(\"orders\")\nif(orders === undefined){\n    orders = [0,0,0]\n}\n\norders[0] = msg.payload\nflow.set(\"orders\", orders)\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 2470,
-        "y": 1060,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "a59f091c6b5b8eef",
-        "type": "function",
-        "z": "50f6fbc320dea49b",
-        "g": "e9cf96557e4dc034",
-        "name": "Set Red Bean Amount",
-        "func": "let orders = flow.get(\"orders\")\nif(orders === undefined){\n    orders = [0,0,0]\n}\norders[1] = msg.payload\nflow.set(\"orders\", orders)\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 2460,
-        "y": 1120,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "1850e85d2d9f86f9",
-        "type": "function",
-        "z": "50f6fbc320dea49b",
-        "g": "e9cf96557e4dc034",
-        "name": "Set Green Tea Amount",
-        "func": "let orders = flow.get(\"orders\")\nif(orders === undefined){\n    orders = [0,0,0]\n}\norders[2] = msg.payload\nflow.set(\"orders\", orders)\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 2460,
-        "y": 1180,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "191afd8b426a5953",
-        "type": "ui_button",
-        "z": "50f6fbc320dea49b",
-        "g": "e9cf96557e4dc034",
-        "name": "",
-        "group": "229fdb851d9f2429",
-        "order": 6,
-        "width": 0,
-        "height": 0,
-        "passthru": false,
-        "label": "Confirm",
-        "tooltip": "",
-        "color": "",
-        "bgcolor": "",
-        "className": "",
-        "icon": "",
-        "payload": "",
-        "payloadType": "str",
-        "topic": "topic",
-        "topicType": "msg",
-        "x": 1380,
-        "y": 1000,
-        "wires": [
-            [
-                "5ce6df22c9910926",
-                "c3906bba9a8796fa",
-                "efb2902c684044fb",
-                "1902d4ddd419bcc6",
-                "0dc1dac0a4e819a5"
-            ]
-        ]
-    },
-    {
-        "id": "5ce6df22c9910926",
-        "type": "function",
-        "z": "50f6fbc320dea49b",
-        "g": "e9cf96557e4dc034",
-        "name": "Disable input upon accepting order",
-        "func": "msg.enabled = false;\ndelete msg.payload;\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 1740,
-        "y": 1000,
-        "wires": [
-            [
-                "9666904b6dc0d5e6",
-                "a5ba93aa8bc00072",
-                "29b1f214ec288ce2",
-                "191afd8b426a5953"
-            ]
-        ]
-    },
-    {
-        "id": "a3a88abf52b9226d",
-        "type": "ui_button",
-        "z": "50f6fbc320dea49b",
-        "g": "e9cf96557e4dc034",
-        "name": "",
-        "group": "229fdb851d9f2429",
-        "order": 7,
-        "width": 0,
-        "height": 0,
-        "passthru": false,
-        "label": "Reset",
-        "tooltip": "",
-        "color": "",
-        "bgcolor": "",
-        "className": "",
-        "icon": "",
-        "payload": "",
-        "payloadType": "str",
-        "topic": "topic",
-        "topicType": "msg",
-        "x": 1370,
-        "y": 1340,
-        "wires": [
-            [
-                "23082030b9411860",
-                "94c5394832133fc2"
-            ]
-        ]
-    },
-    {
-        "id": "23082030b9411860",
-        "type": "function",
-        "z": "50f6fbc320dea49b",
-        "g": "e9cf96557e4dc034",
-        "name": "Enable input upon reset",
-        "func": "msg.enabled = true;\nmsg.payload = \"\"\nflow.set(\"orders\",[0,0,0]);\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 1630,
-        "y": 1340,
-        "wires": [
-            [
-                "a5ba93aa8bc00072",
-                "9666904b6dc0d5e6",
-                "29b1f214ec288ce2",
-                "191afd8b426a5953"
-            ]
-        ]
-    },
-    {
-        "id": "cec93aa66d8c521a",
-        "type": "ui_text",
-        "z": "50f6fbc320dea49b",
-        "g": "e9cf96557e4dc034",
-        "group": "229fdb851d9f2429",
-        "order": 8,
-        "width": 0,
-        "height": 0,
-        "name": "Status Indicator",
-        "label": "Status",
-        "format": "{{msg.payload}}",
-        "layout": "row-spread",
-        "className": "",
-        "x": 2180,
-        "y": 1240,
-        "wires": []
-    },
-    {
-        "id": "c3906bba9a8796fa",
-        "type": "change",
-        "z": "50f6fbc320dea49b",
-        "g": "e9cf96557e4dc034",
-        "name": "Notify Order success",
-        "rules": [
-            {
-                "t": "set",
-                "p": "payload",
-                "pt": "msg",
-                "to": "Order is successful",
-                "tot": "str"
-            }
-        ],
-        "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 1700,
-        "y": 1080,
-        "wires": [
-            [
-                "cec93aa66d8c521a"
-            ]
-        ]
-    },
-    {
-        "id": "94c5394832133fc2",
-        "type": "change",
-        "z": "50f6fbc320dea49b",
-        "g": "e9cf96557e4dc034",
-        "name": "",
-        "rules": [
-            {
-                "t": "set",
-                "p": "payload",
-                "pt": "msg",
-                "to": "",
-                "tot": "str"
-            }
-        ],
-        "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 1640,
-        "y": 1400,
-        "wires": [
-            [
-                "cec93aa66d8c521a"
-            ]
-        ]
-    },
-    {
-        "id": "68eeaa4a891c7350",
-        "type": "switch",
-        "z": "50f6fbc320dea49b",
-        "g": "ea4ca3fed76ae949",
-        "name": "Proceed only if there are orders",
-        "property": "order_made",
-        "propertyType": "msg",
-        "rules": [
-            {
-                "t": "eq",
-                "v": "true",
-                "vt": "str"
-            }
-        ],
-        "checkall": "true",
-        "repair": false,
-        "outputs": 1,
-        "x": 1230,
-        "y": 460,
-        "wires": [
-            [
-                "efb2902c684044fb",
-                "1902d4ddd419bcc6",
-                "0dc1dac0a4e819a5",
-                "d7e5f1b70adaebd9"
-            ]
-        ]
-    },
-    {
-        "id": "d7e5f1b70adaebd9",
+        "id": "04e94377dc486842",
         "type": "sqlite",
-        "z": "50f6fbc320dea49b",
-        "g": "ea4ca3fed76ae949",
-        "mydb": "4cb129b3923edcd0",
+        "z": "eaf0f6e02f768ad8",
+        "mydb": "963ab30464d0e7c2",
         "sqlquery": "msg.topic",
         "sql": "",
-        "name": "",
-        "x": 1250,
-        "y": 360,
+        "name": "Mooncake Database",
+        "x": 700,
+        "y": 1480,
         "wires": [
             []
         ]
     },
     {
-        "id": "362827f4b7c7a8b5",
+        "id": "91fedb63ef035c70",
         "type": "function",
-        "z": "50f6fbc320dea49b",
-        "g": "ea4ca3fed76ae949",
-        "name": "Notify database of completion",
-        "func": "let order_id = flow.get(\"order_id\")\n\nif (order_id === undefined){\n    msg.error = \"order_id not set\"\n    return msg;\n}\n\nmsg.topic = `UPDATE MENU_ORDER SET order_status=\"Order completed\"\n             WHERE order_id=${order_id}`\nreturn msg;",
+        "z": "eaf0f6e02f768ad8",
+        "name": "Send cancellation message",
+        "func": "let order_ids = msg.payload.values;\nmsg.channel = msg.payload.channelId\n\nif (order_ids.length === 1){\n    msg.payload =  `Order: ${order_ids[0]} has been cancelled`\n} else{\n    msg.payload = `Orders: ${order_ids.toString()} have been cancelled`\n}\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 830,
-        "y": 360,
-        "wires": [
-            [
-                "d7e5f1b70adaebd9"
-            ]
-        ]
-    },
-    {
-        "id": "9d77f75895e9fea8",
-        "type": "switch",
-        "z": "50f6fbc320dea49b",
-        "g": "ea4ca3fed76ae949",
-        "name": "Check if stop was valid",
-        "property": "invalid_reset",
-        "propertyType": "msg",
-        "rules": [
-            {
-                "t": "eq",
-                "v": "false",
-                "vt": "str"
-            }
-        ],
-        "checkall": "true",
-        "repair": false,
-        "outputs": 1,
-        "x": 800,
-        "y": 620,
-        "wires": [
-            [
-                "09b9111ff95375dd"
-            ]
-        ]
-    },
-    {
-        "id": "09b9111ff95375dd",
-        "type": "sqlite",
-        "z": "50f6fbc320dea49b",
-        "g": "ea4ca3fed76ae949",
-        "mydb": "4cb129b3923edcd0",
-        "sqlquery": "msg.topic",
-        "sql": "",
-        "name": "",
-        "x": 1190,
-        "y": 620,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "4e9df0bd797199cd",
-        "type": "function",
-        "z": "50f6fbc320dea49b",
-        "name": "Buffer node",
-        "func": "\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 4330,
-        "y": 480,
-        "wires": [
-            [
-                "fa2abe40a593d651"
-            ]
-        ]
-    },
-    {
-        "id": "dfc5a2f190d5f059",
-        "type": "function",
-        "z": "50f6fbc320dea49b",
-        "g": "ea4ca3fed76ae949",
-        "name": "Check if order has been stopped",
-        "func": "const orders = flow.get(\"orders\")\n\nmsg.stopped=\"false\"\nif (orders.toString() === [0,0,0].toString()){\n    msg.stopped = \"true\"\n}\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 190,
-        "y": 360,
-        "wires": [
-            [
-                "5c38255a69294198"
-            ]
-        ]
-    },
-    {
-        "id": "5c38255a69294198",
-        "type": "switch",
-        "z": "50f6fbc320dea49b",
-        "g": "ea4ca3fed76ae949",
-        "name": "Proceed only if not stopped",
-        "property": "stopped",
-        "propertyType": "msg",
-        "rules": [
-            {
-                "t": "eq",
-                "v": "false",
-                "vt": "str"
-            }
-        ],
-        "checkall": "true",
-        "repair": false,
-        "outputs": 1,
-        "x": 480,
-        "y": 360,
-        "wires": [
-            [
-                "edad8c679e19ae60",
-                "362827f4b7c7a8b5"
-            ]
-        ]
-    },
-    {
-        "id": "b6792239f04bfde4",
-        "type": "OpcUa-Item",
-        "z": "50f6fbc320dea49b",
-        "g": "cfaea44f96a90458",
-        "item": "ns=2;s=_start_btn;datatype=Boolean",
-        "datatype": "Boolean",
-        "value": "",
-        "name": "_start_btn",
-        "x": 580,
-        "y": 1720,
-        "wires": [
-            [
-                "682355ac9bc88396"
-            ]
-        ]
-    },
-    {
-        "id": "537c4b3198fab4c7",
-        "type": "OpcUa-Item",
-        "z": "50f6fbc320dea49b",
-        "g": "cfaea44f96a90458",
-        "item": "ns=2;s=_stop_btn;datatype=Boolean",
-        "datatype": "Boolean",
-        "value": "",
-        "name": "_stop_btn",
-        "x": 580,
-        "y": 1780,
-        "wires": [
-            [
-                "682355ac9bc88396"
-            ]
-        ]
-    },
-    {
-        "id": "cf545a4f7c618db1",
-        "type": "delay",
-        "z": "50f6fbc320dea49b",
-        "g": "ea4ca3fed76ae949",
-        "name": "",
-        "pauseType": "delay",
-        "timeout": "2",
-        "timeoutUnits": "seconds",
-        "rate": "1",
-        "nbRateUnits": "1",
-        "rateUnits": "second",
-        "randomFirst": "1",
-        "randomLast": "5",
-        "randomUnits": "seconds",
-        "drop": false,
-        "allowrate": false,
-        "outputs": 1,
         "x": 400,
-        "y": 260,
+        "y": 1680,
         "wires": [
             [
-                "dfc5a2f190d5f059"
+                "bd36d719914c2fab"
             ]
         ]
     },
     {
-        "id": "25e52b64bd30bec6",
-        "type": "OpcUa-Client",
-        "z": "50f6fbc320dea49b",
-        "endpoint": "df2f1b827a0d1854",
-        "action": "write",
-        "deadbandtype": "a",
-        "deadbandvalue": 1,
-        "time": 10,
-        "timeUnit": "s",
-        "certificate": "n",
-        "localfile": "",
-        "localkeyfile": "",
-        "securitymode": "None",
-        "securitypolicy": "None",
-        "folderName4PKI": "",
-        "name": "",
-        "x": 3360,
-        "y": 120,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "d79bbb684caeee89",
-        "type": "change",
-        "z": "50f6fbc320dea49b",
-        "name": "Turn on Conveyor",
-        "rules": [
-            {
-                "t": "set",
-                "p": "payload",
-                "pt": "msg",
-                "to": "true",
-                "tot": "bool"
-            }
-        ],
-        "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 3170,
-        "y": 120,
-        "wires": [
-            [
-                "25e52b64bd30bec6"
-            ]
-        ]
-    },
-    {
-        "id": "e46fa7de32735ff0",
+        "id": "5fa049f6a5e694ba",
         "type": "function",
-        "z": "50f6fbc320dea49b",
-        "name": "Conveyor Belt",
-        "func": "let sensor_no = flow.get(\"sensor_no\")\n\nmsg.topic = \"ns=2;s=_conveyor\"+sensor_no+\";datatype=Boolean\"\nreturn msg;",
+        "z": "eaf0f6e02f768ad8",
+        "name": "Delete from ITEM_ORDER",
+        "func": "msg.topic = `DELETE FROM ORDER_ITEM WHERE order_id\n            IN (${msg.payload.values.toString()})`\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 2960,
-        "y": 120,
+        "x": 420,
+        "y": 1580,
         "wires": [
             [
-                "d79bbb684caeee89"
+                "04e94377dc486842"
             ]
         ]
     },
     {
-        "id": "a12d8400d795190a",
-        "type": "OpcUa-Client",
-        "z": "50f6fbc320dea49b",
-        "endpoint": "df2f1b827a0d1854",
-        "action": "write",
-        "deadbandtype": "a",
-        "deadbandvalue": 1,
-        "time": 10,
-        "timeUnit": "s",
-        "certificate": "n",
-        "localfile": "",
-        "localkeyfile": "",
-        "securitymode": "None",
-        "securitypolicy": "None",
-        "folderName4PKI": "",
+        "id": "bd36d719914c2fab",
+        "type": "discordMessageManager",
+        "z": "eaf0f6e02f768ad8",
         "name": "",
-        "x": 4160,
-        "y": 260,
+        "channel": "",
+        "token": "",
+        "x": 790,
+        "y": 1680,
         "wires": [
             []
         ]
     },
     {
-        "id": "e47c3a2480ce57ac",
-        "type": "change",
-        "z": "50f6fbc320dea49b",
-        "name": "Turn off Conveyor",
-        "rules": [
-            {
-                "t": "set",
-                "p": "payload",
-                "pt": "msg",
-                "to": "false",
-                "tot": "bool"
-            }
-        ],
-        "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 3730,
-        "y": 260,
+        "id": "d671c4bbae713125",
+        "type": "subflow:765dc67df7a1e33f",
+        "z": "eaf0f6e02f768ad8",
+        "name": "Respond to !summary",
+        "x": 780,
+        "y": 360,
         "wires": [
             [
-                "9f155d12ee5daad4"
+                "6873d1a99446b6b1"
             ]
         ]
     },
     {
-        "id": "0573fb9cd7502247",
-        "type": "function",
-        "z": "50f6fbc320dea49b",
-        "name": "Conveyor Belt",
-        "func": "let sensor_no = flow.get(\"sensor_no\") - 1\n\nmsg.topic = \"ns=2;s=_conveyor\"+sensor_no+\";datatype=Boolean\"\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 3520,
-        "y": 260,
-        "wires": [
-            [
-                "e47c3a2480ce57ac"
-            ]
-        ]
-    },
-    {
-        "id": "9f155d12ee5daad4",
-        "type": "delay",
-        "z": "50f6fbc320dea49b",
-        "name": "Await delivery of box",
-        "pauseType": "delay",
-        "timeout": "1",
-        "timeoutUnits": "seconds",
-        "rate": "1",
-        "nbRateUnits": "1",
-        "rateUnits": "second",
-        "randomFirst": "1",
-        "randomLast": "5",
-        "randomUnits": "seconds",
-        "drop": false,
-        "allowrate": false,
-        "outputs": 1,
-        "x": 3960,
-        "y": 260,
-        "wires": [
-            [
-                "a12d8400d795190a"
-            ]
-        ]
-    },
-    {
-        "id": "0dc1dac0a4e819a5",
-        "type": "change",
-        "z": "50f6fbc320dea49b",
-        "name": "Start conveyor belt:4",
-        "rules": [
-            {
-                "t": "set",
-                "p": "payload",
-                "pt": "msg",
-                "to": "true",
-                "tot": "bool"
-            },
-            {
-                "t": "set",
-                "p": "topic",
-                "pt": "msg",
-                "to": "ns=2;s=_conveyor4;datatype=Boolean",
-                "tot": "str"
-            }
-        ],
-        "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 1660,
-        "y": 740,
-        "wires": [
-            [
-                "0758a7f725d9d1bb"
-            ]
-        ]
-    },
-    {
-        "id": "0758a7f725d9d1bb",
-        "type": "OpcUa-Client",
-        "z": "50f6fbc320dea49b",
-        "endpoint": "df2f1b827a0d1854",
-        "action": "write",
-        "deadbandtype": "a",
-        "deadbandvalue": 1,
-        "time": 10,
-        "timeUnit": "s",
-        "certificate": "n",
-        "localfile": "",
-        "localkeyfile": "",
-        "securitymode": "None",
-        "securitypolicy": "None",
-        "folderName4PKI": "",
-        "name": "",
-        "x": 1880,
-        "y": 740,
-        "wires": [
-            [
-                "38ba31dbbe4b3730"
-            ]
-        ]
-    },
-    {
-        "id": "45578ef0beb6ded3",
-        "type": "OpcUa-Client",
-        "z": "50f6fbc320dea49b",
-        "endpoint": "df2f1b827a0d1854",
-        "action": "write",
-        "deadbandtype": "a",
-        "deadbandvalue": 1,
-        "time": 10,
-        "timeUnit": "s",
-        "certificate": "n",
-        "localfile": "",
-        "localkeyfile": "",
-        "securitymode": "None",
-        "securitypolicy": "None",
-        "folderName4PKI": "",
-        "name": "",
-        "x": 2500,
-        "y": 740,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "38ba31dbbe4b3730",
-        "type": "subflow:023d3c161439f2e9",
-        "z": "50f6fbc320dea49b",
-        "name": "Let box move and stop conveyor belt:4",
+        "id": "669ca1f32ea803bd",
+        "type": "subflow:765dc67df7a1e33f",
+        "z": "eaf0f6e02f768ad8",
+        "name": "Respond to !repeat",
         "env": [
             {
-                "name": "DELAY",
-                "value": "2.6",
+                "name": "APPEND",
+                "value": "Select an Order ID to repeat a previous order!",
                 "type": "str"
             }
         ],
-        "x": 2190,
-        "y": 740,
+        "x": 770,
+        "y": 300,
         "wires": [
             [
-                "45578ef0beb6ded3"
+                "6873d1a99446b6b1",
+                "f77e05d008bae82f"
             ]
         ]
     },
     {
-        "id": "180c0fde980bafd8",
-        "type": "OpcUa-Item",
-        "z": "50f6fbc320dea49b",
-        "g": "cfaea44f96a90458",
-        "item": "ns=2;s=_conveyor4;datatype=Boolean;value=false",
-        "datatype": "Boolean",
-        "value": "",
-        "name": "_conveyor4",
-        "x": 590,
-        "y": 1380,
-        "wires": [
-            [
-                "682355ac9bc88396"
-            ]
-        ]
-    },
-    {
-        "id": "8a3d21f15207e729",
-        "type": "OpcUa-Item",
-        "z": "50f6fbc320dea49b",
-        "g": "cfaea44f96a90458",
-        "item": "ns=2;s=_Remover;datatype=Boolean;value=false",
-        "datatype": "Boolean",
-        "value": "0",
-        "name": "_Remover",
-        "x": 590,
-        "y": 1660,
-        "wires": [
-            [
-                "682355ac9bc88396"
-            ]
-        ]
-    },
-    {
-        "id": "9981caba16606c21",
-        "type": "change",
-        "z": "50f6fbc320dea49b",
-        "name": "Start Remover",
-        "rules": [
+        "id": "660212f3d42c49a4",
+        "type": "subflow:db18efe3ac9314eb",
+        "z": "eaf0f6e02f768ad8",
+        "name": "Display order selection menu",
+        "env": [
             {
-                "t": "set",
-                "p": "payload",
-                "pt": "msg",
-                "to": "true",
-                "tot": "bool"
-            },
-            {
-                "t": "set",
-                "p": "topic",
-                "pt": "msg",
-                "to": "ns=2;s=_Remover;datatype=Boolean",
-                "tot": "str"
+                "name": "CUSTOM_ID",
+                "value": "OrderCancel",
+                "type": "str"
             }
         ],
-        "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 4080,
-        "y": 620,
+        "x": 1120,
+        "y": 600,
         "wires": [
             [
-                "cce130b9f0a9021e"
+                "6873d1a99446b6b1"
             ]
         ]
     },
     {
-        "id": "6f4a4161cc76445a",
-        "type": "subflow:023d3c161439f2e9",
-        "z": "50f6fbc320dea49b",
-        "name": "Stop Remover after wait",
-        "x": 4570,
-        "y": 620,
+        "id": "f77e05d008bae82f",
+        "type": "subflow:db18efe3ac9314eb",
+        "z": "eaf0f6e02f768ad8",
+        "name": "Display order selection menu",
+        "env": [
+            {
+                "name": "CUSTOM_ID",
+                "value": "OrderRepeat",
+                "type": "str"
+            }
+        ],
+        "x": 1140,
+        "y": 300,
         "wires": [
             [
-                "1a67a98b4f038632"
+                "6873d1a99446b6b1"
             ]
         ]
     },
     {
-        "id": "1a67a98b4f038632",
-        "type": "OpcUa-Client",
-        "z": "50f6fbc320dea49b",
-        "endpoint": "df2f1b827a0d1854",
-        "action": "write",
-        "deadbandtype": "a",
-        "deadbandvalue": 1,
-        "time": 10,
-        "timeUnit": "s",
-        "certificate": "n",
-        "localfile": "",
-        "localkeyfile": "",
-        "securitymode": "None",
-        "securitypolicy": "None",
-        "folderName4PKI": "",
-        "name": "OPC UA Client: Receiver",
-        "x": 4830,
-        "y": 620,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "cce130b9f0a9021e",
-        "type": "OpcUa-Client",
-        "z": "50f6fbc320dea49b",
-        "endpoint": "df2f1b827a0d1854",
-        "action": "write",
-        "deadbandtype": "a",
-        "deadbandvalue": 1,
-        "time": 10,
-        "timeUnit": "s",
-        "certificate": "n",
-        "localfile": "",
-        "localkeyfile": "",
-        "securitymode": "None",
-        "securitypolicy": "None",
-        "folderName4PKI": "",
-        "name": "OPC UA Client: Receiver",
-        "x": 4310,
-        "y": 620,
+        "id": "54db784df9faba71",
+        "type": "discordInteraction",
+        "z": "eaf0f6e02f768ad8",
+        "name": "RepeatSelection",
+        "token": "",
+        "interactionType": "selectMenu",
+        "custom_id": "OrderRepeat",
+        "commandResponse": "",
+        "interactionObject": false,
+        "x": 160,
+        "y": 1220,
         "wires": [
             [
-                "6f4a4161cc76445a"
+                "ac47b417f6e627d5"
             ]
         ]
     },
     {
-        "id": "d9acf19651088861",
-        "type": "comment",
-        "z": "50f6fbc320dea49b",
-        "g": "e9cf96557e4dc034",
-        "name": "Order Dashboard",
-        "info": "The Order Dashboard was created for task 4 and allows to instruct the factory for a specific amount of palletizing boxes for each flavor.\n\nIt is not linked with the database and the Discord bot. It can be used for debugging.",
-        "x": 2260,
-        "y": 1380,
-        "wires": []
+        "id": "ac47b417f6e627d5",
+        "type": "function",
+        "z": "eaf0f6e02f768ad8",
+        "name": "Query previous order ID",
+        "func": "const orderId = msg.payload.values[0],\n      date = new Date().getTime()\n      \nmsg.topic = `SELECT item_name, quantity FROM ORDER_ITEM WHERE order_id='${orderId}'`\nmsg.date = date\nmsg.user = msg.payload.user.id\nmsg.channel = msg.payload.channelId\nmsg.orderComplete = \"true\"\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 410,
+        "y": 1220,
+        "wires": [
+            [
+                "a3b386c73b1579fd"
+            ]
+        ]
     },
     {
-        "id": "482dac863765cfcc",
-        "type": "comment",
-        "z": "50f6fbc320dea49b",
-        "g": "cfaea44f96a90458",
-        "name": "Initialization",
-        "info": "Inject variables to Factory I/O upon connection",
-        "x": 310,
-        "y": 920,
-        "wires": []
+        "id": "a3b386c73b1579fd",
+        "type": "sqlite",
+        "z": "eaf0f6e02f768ad8",
+        "mydb": "4cb129b3923edcd0",
+        "sqlquery": "msg.topic",
+        "sql": "",
+        "name": "",
+        "x": 620,
+        "y": 1220,
+        "wires": [
+            [
+                "010b45415153a4bd"
+            ]
+        ]
     },
     {
-        "id": "48f8c779fa22efdf",
-        "type": "comment",
-        "z": "50f6fbc320dea49b",
-        "name": "Buffer Node",
-        "info": "The buffer node is used to trigger the complete node, which is used to move on to the next order after the completion of an order in the database",
-        "x": 4450,
-        "y": 420,
-        "wires": []
+        "id": "8fad7c3a965ddc68",
+        "type": "subflow:cf97d56318f211dd",
+        "z": "eaf0f6e02f768ad8",
+        "name": "",
+        "x": 1210,
+        "y": 1220,
+        "wires": [
+            [
+                "195bb607d2363748"
+            ]
+        ]
     },
     {
-        "id": "df2f1b827a0d1854",
-        "type": "OpcUa-Endpoint",
-        "endpoint": "opc.tcp://127.0.0.1:53880",
-        "secpol": "None",
-        "secmode": "None",
-        "none": false,
-        "login": false,
-        "usercert": false,
-        "usercertificate": "",
-        "userprivatekey": ""
+        "id": "010b45415153a4bd",
+        "type": "function",
+        "z": "eaf0f6e02f768ad8",
+        "name": "Format input for database",
+        "func": "let itemArray = msg.payload,\n    resArray = [], itemObj = {}, item, quantity;\n\nfor (let i=0; i< itemArray.length; i++){\n    itemObj = {}\n    item = itemArray[i].item_name\n    quantity = itemArray[i].quantity\n    \n    itemObj[item] = quantity\n    resArray.push(itemObj)\n}\n\nmsg.payload = resArray\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 890,
+        "y": 1220,
+        "wires": [
+            [
+                "8fad7c3a965ddc68"
+            ]
+        ]
     },
     {
-        "id": "917a6a0ec30b9da8",
-        "type": "ui_group",
-        "name": "Orders",
-        "tab": "29b9ef0389b9af45",
-        "order": 1,
-        "disp": true,
-        "width": "6",
-        "collapse": false,
-        "className": ""
+        "id": "1ccf8a9a47ee9b89",
+        "type": "subflow:765dc67df7a1e33f",
+        "z": "eaf0f6e02f768ad8",
+        "name": "Respond to !cancel",
+        "env": [
+            {
+                "name": "APPEND",
+                "value": "Select the Order ID to cancel your order",
+                "type": "str"
+            },
+            {
+                "name": "ADDITIONAL_QUERY",
+                "value": "AND order_status='Order successful'",
+                "type": "str"
+            }
+        ],
+        "x": 770,
+        "y": 600,
+        "wires": [
+            [
+                "660212f3d42c49a4",
+                "6873d1a99446b6b1"
+            ]
+        ]
+    },
+    {
+        "id": "963ab30464d0e7c2",
+        "type": "sqlitedb",
+        "db": "Mooncakes.db",
+        "mode": "RWC"
     },
     {
         "id": "4cb129b3923edcd0",
         "type": "sqlitedb",
         "db": "Mooncakes.db",
         "mode": "RWC"
-    },
-    {
-        "id": "229fdb851d9f2429",
-        "type": "ui_group",
-        "name": "Make your order",
-        "tab": "c1493d12ac90a6c5",
-        "order": 1,
-        "disp": true,
-        "width": "6",
-        "collapse": false,
-        "className": ""
-    },
-    {
-        "id": "29b9ef0389b9af45",
-        "type": "ui_tab",
-        "name": "Control panel",
-        "icon": "dashboard",
-        "disabled": false,
-        "hidden": false
-    },
-    {
-        "id": "c1493d12ac90a6c5",
-        "type": "ui_tab",
-        "name": "Order Panel",
-        "icon": "dashboard",
-        "disabled": false,
-        "hidden": false
     }
 ]
